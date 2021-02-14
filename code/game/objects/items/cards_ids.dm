@@ -720,6 +720,26 @@ update_label()
 /obj/item/card/id/away/deep_storage //deepstorage.dmm space ruin
 	name = "bunker access ID"
 
+/obj/item/card/id/infiltrator
+	name = "plastic movie promotional ID card"
+	desc = "Roseus Galactic presents: Another Generic Killing Spree! In theatres near you!"
+	registered_name = "Insidious Stranger"
+	assignment = "Roseus Galactic"
+	icon_state = "syndie"
+	id_type_name = "syndicate ID card"
+	uses_overlays = FALSE
+	registered_age = null
+	
+/obj/item/card/id/infiltrator/Initialize()
+	.=..()
+	var/random_movie_title = pick("Painting Maint Red", "Neon Greed: Genesis", "For a Pair of Gloves", "The Grey I Could Love", "Screwdriver IV", "Hatchet III: Desperado", "The Baroness Lives", "Psy-Co")
+	var/content_warning = pick("Contains explicit ERP scenes", "Viewer discretion advised", "Contains extreme gore, heavy drug use, nudity and corgi abuse", "Rated R for Restricted", "Just don't tell your parents you're watching")
+	var/supervilain_first_name = pick("The ", "Tomahawk ", "Treacherous ", "Bloody ", "Ancient ", "Unknown ", "Masked ", "Grey ", "Insidious ", "Dread ")
+	var/supervillain_last_name = pick("Crusher", "Bandito", "Desperado", "Stranger", "Maintcrawler", "Assassin", "Piemaster", "Reaper", "Butcher")
+	name = "plastic '[random_movie_title]' promotional ID card"
+	desc = "Roseus Galactic presents: [random_movie_title]! In theatres near you! \n[content_warning]."
+	registered_name = "[supervilain_first_name][supervillain_last_name]"
+
 /obj/item/card/id/departmental_budget
 	name = "departmental card (FUCK)"
 	desc = "Provides access to the departmental budget."

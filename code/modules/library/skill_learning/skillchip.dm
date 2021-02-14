@@ -453,7 +453,7 @@
 	chip_category = SKILLCHIP_CATEGORY_FIREMAN_CARRYING
 	skillchip_flags = SKILLCHIP_RESTRICTED_CATEGORIES
 	incompatibility_list = list(SKILLCHIP_CATEGORY_FIREMAN_CARRYING)
-	skill_description = "Learn how to fireman carry like a professional, and haul the injured, sick or dying with speed!"
-	skill_icon = "hand-holding"
+	skill_description = "Learn how to fireman carry like an expert, and haul the injured, sick or dying with speed!"
+	skill_icon = "hand-holding-heart"
 	activate_message = "<span class='notice'>Carrying people across your back feels like second nature to you.</span>"
 	deactivate_message = "<span class='notice'>Your expert knowledge in fireman carrying fades from your mind.</span>"

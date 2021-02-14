@@ -224,6 +224,11 @@
 	return TRUE
 
 /obj/item/autosurgeon/skillchip/syndicate/chameleon_chip
-	desc = "A single use autosurgeon that contains a Syndicate skillchip. A screwdriver can be used to remove it, but skillchips can't be placed back in."
+	desc = "A single use autosurgeon that contains a Syndicate Chameleon skillchip. A screwdriver can be used to remove it, but skillchips can't be placed back in."
 	uses = 1
 	starting_skillchip = /obj/item/skillchip/chameleon
+
+/obj/item/autosurgeon/skillchip/syndicate/kidnapping_chip
+	desc = "A single use autosurgeon that contains an illegal acquired RES-Q skillchip. A screwdriver can be used to remove it, but skillchips can't be placed back in."
+	uses = 1
+	starting_skillchip = /obj/item/skillchip/quickercarry

@@ -180,6 +180,22 @@
 	strip_delay = 60
 	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 70, ACID = 50)
 
+/obj/item/clothing/gloves/color/infiltrator
+	name = "infiltrator gloves"
+	desc = "Specialized combat gloves that keep you well insulated from temperature and shocks alike!"
+	icon_state = "infiltrator"
+	base_icon_state = "infiltrator"
+	inhand_icon_state = "infiltrator"
+	siemens_coefficient = 0
+	permeability_coefficient = 0.3
+	strip_delay = 80
+	cold_protection = HANDS
+	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	heat_protection = HANDS
+	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
+	resistance_flags = FIRE_PROOF | ACID_PROOF
+	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+
 /obj/item/clothing/gloves/color/latex
 	name = "latex gloves"
 	desc = "Cheap sterile gloves made from latex. Transfers minor paramedic knowledge to the user via budget nanochips."
@@ -196,15 +212,6 @@
 	icon_state = "nitrile"
 	inhand_icon_state = "nitrilegloves"
 	transfer_prints = FALSE
-
-/obj/item/clothing/gloves/color/latex/nitrile/infiltrator
-	name = "infiltrator gloves"
-	desc = "Specialized combat gloves for carrying people around. Transfers tactical kidnapping knowledge into the user via nanochips."
-	icon_state = "infiltrator"
-	inhand_icon_state = "infiltrator"
-	siemens_coefficient = 0
-	permeability_coefficient = 0.3
-	resistance_flags = FIRE_PROOF | ACID_PROOF
 
 /obj/item/clothing/gloves/color/latex/engineering
 	name = "tinker's gloves"

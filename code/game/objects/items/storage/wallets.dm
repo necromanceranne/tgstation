@@ -2,6 +2,7 @@
 	name = "wallet"
 	desc = "It can hold a few small and personal things."
 	icon_state = "wallet"
+	base_icon_state = "wallet"
 	w_class = WEIGHT_CLASS_SMALL
 	resistance_flags = FLAMMABLE
 	slot_flags = ITEM_SLOT_ID
@@ -10,6 +11,7 @@
 	var/obj/item/card/id/front_id = null
 	var/list/combined_access
 	var/cached_flat_icon
+	var/base_wallet_name = "wallet"
 
 /obj/item/storage/wallet/ComponentInitialize()
 	. = ..()
@@ -70,7 +72,7 @@
 	if(front_id)
 		. += mutable_appearance(front_id.icon, front_id.icon_state)
 		. += front_id.overlays
-		. += mutable_appearance(icon, "wallet_overlay")
+		. += mutable_appearance(icon, "[base_icon_state]_overlay")
 
 /obj/item/storage/wallet/proc/get_cached_flat_icon()
 	if(!cached_flat_icon)
@@ -84,9 +86,9 @@
 
 /obj/item/storage/wallet/proc/update_label()
 	if(front_id)
-		name = "wallet displaying [front_id]"
+		name = "[base_wallet_name] displaying [front_id]"
 	else
-		name = "wallet"
+		name = "[base_wallet_name]"
 
 /obj/item/storage/wallet/examine()
 	. = ..()
@@ -116,6 +118,20 @@
 		return combined_access
 	else
 		return ..()
+
+/obj/item/storage/wallet/infiltrator
+	name = "black leather wallet"
+	desc = "Wait a second, only villains have black leather wallets!"
+	icon_state = "evilwallet"
+	base_icon_state = "evilwallet"
+	resistance_flags = FIRE_PROOF | ACID_PROOF
+	base_wallet_name = "black leather wallet"
+
+/obj/item/storage/wallet/infiltrator/PopulateContents()
+	new /obj/item/card/id/infiltrator(src)
+	new /obj/item/clothing/mask/cigarette(src)
+	new /obj/item/holochip(src, rand(50,100))
+	new /obj/item/lighter(src)
 
 /obj/item/storage/wallet/random
 	icon_state = "random_wallet"
