@@ -60,7 +60,9 @@
 			soulstones -= soulstone
 
 
-/datum/component/soul_stealer/proc/try_capture(mob/living/carbon/human/victim, mob/living/captor)
+/datum/component/soul_stealer/proc/try_capture(obj/item/source, mob/living/carbon/human/victim, mob/living/captor)
+	if(SEND_SIGNAL(source, COMSIG_OBJECT_PRE_SOUL_STEAL, victim, captor) & COMPONENT_CANCEL_SOUL_STEAL)
+		return
 	if(victim.stat == CONSCIOUS)
 		return
 	var/obj/item/soulstone/soulstone = new soulstone_type(parent)

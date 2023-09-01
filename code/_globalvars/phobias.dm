@@ -459,7 +459,7 @@ GLOBAL_LIST_INIT(phobia_objs, list(
 		/obj/item/clothing/suit/wizrobe,
 		/obj/item/clothing/under/rank/civilian/chaplain,
 		/obj/item/codex_cicatrix,
-		/obj/item/cult_bastard,
+		/obj/item/melee/cultblade/bastard,
 		/obj/item/gun/magic,
 		/obj/item/melee/cultblade,
 		/obj/item/melee/rune_carver,

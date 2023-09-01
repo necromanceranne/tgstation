@@ -369,7 +369,7 @@
 /datum/antagonist/heretic/proc/on_cult_sacrificed(mob/living/source, list/invokers)
 	SIGNAL_HANDLER
 
-	new /obj/item/cult_bastard(source.loc)
+	new /obj/item/melee/cultblade/bastard(source.loc)
 	for(var/mob/living/cultist as anything in invokers)
 		to_chat(cultist, span_cultlarge("\"A follower of the forgotten gods! You must be rewarded for such a valuable sacrifice.\""))
 	return SILENCE_SACRIFICE_MESSAGE

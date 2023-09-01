@@ -55,6 +55,14 @@
 ///from base of element/bane/activate(): (item/weapon, mob/user)
 #define COMSIG_OBJECT_ON_BANING "obj_on_baning"
 
+/// from component/spin2win/proc/on_attack_self(): (mob/user)
+#define COMSIG_OBJECT_PRE_SPIN2WIN "obj_pre_spin2win"
+	#define COMPONENT_CANCEL_SPIN2WIN (1<<0)
+
+/// from component/soul_stealer/proc/on_afterattack(): (atom/target, mob/user)
+#define COMSIG_OBJECT_PRE_SOUL_STEAL "obj_pre_soul_steal"
+	#define COMPONENT_CANCEL_SOUL_STEAL (1<<0)
+
 /// from base of mob/living/updatehealth()
 #define COMSIG_LIVING_HEALTH_UPDATE "living_health_update"
 ///from base of mob/living/death(): (gibbed)

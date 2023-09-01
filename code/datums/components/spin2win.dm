@@ -70,10 +70,11 @@
 	if(!COOLDOWN_FINISHED(src, spin_cooldown))
 		user.balloon_alert(user, "on cooldown!")
 		return
-
+	if(SEND_SIGNAL(source, COMSIG_OBJECT_PRE_SPIN2WIN, user) & COMPONENT_CANCEL_SPIN2WIN)
+		return
 	start_spinning(user)
 
-/datum/component/spin2win/proc/start_spinning(mob/living/spinning_user)
+/datum/component/spin2win/proc/start_spinning(obj/item/source, mob/living/spinning_user)
 	//user will always exist for the start
 	spinning = TRUE
 	spinning_user.changeNext_move(5 SECONDS)

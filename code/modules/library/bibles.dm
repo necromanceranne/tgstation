@@ -314,9 +314,9 @@ GLOBAL_LIST_INIT(bibleitemstates, list(
 			other_bible.inhand_icon_state = inhand_icon_state
 			other_bible.deity_name = deity_name
 
-	if(istype(bible_smacked, /obj/item/cult_bastard) && !IS_CULTIST(user))
+	if(istype(bible_smacked, /obj/item/melee/cultblade/bastard) && !IS_CULTIST(user))
 		. |= AFTERATTACK_PROCESSED_ITEM
-		var/obj/item/cult_bastard/sword = bible_smacked
+		var/obj/item/melee/cultblade/bastard/sword = bible_smacked
 		bible_smacked.balloon_alert(user, "exorcising...")
 		playsound(src,'sound/hallucinations/veryfar_noise.ogg',40,TRUE)
 		if(do_after(user, 4 SECONDS, target = sword))
