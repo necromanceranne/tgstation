@@ -310,6 +310,10 @@
 		/obj/item/clothing/glasses/regular = 1,
 		/obj/item/reagent_containers/cup/glass/drinkingglass = 1,
 	)
+	parts = list(
+		/obj/item/stock_parts/micro_laser = 1,
+		/obj/item/stock_parts/capacitor = 1,
+	)
 	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	time = 10 SECONDS
 	category = CAT_WEAPON_RANGED

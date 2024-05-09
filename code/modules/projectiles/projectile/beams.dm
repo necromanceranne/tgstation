@@ -69,16 +69,14 @@
 	name = "low-power laser"
 	icon_state = "laser_musket"
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/purple_laser
-	damage = 25
-	stamina = 40
+	damage = 20
+	stamina = 35
 	light_color = COLOR_STRONG_VIOLET
-	weak_against_armour = TRUE
 
 /obj/projectile/beam/laser/musket/prime
 	name = "mid-power laser"
 	damage = 30
 	stamina = 45
-	weak_against_armour = FALSE
 
 /obj/projectile/beam/weak
 	damage = 15

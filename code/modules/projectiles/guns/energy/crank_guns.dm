@@ -10,21 +10,91 @@
 	can_bayonet = TRUE
 	knife_x_offset = 22
 	knife_y_offset = 11
+	/// How quickly our musket charges up.
+	var/current_capacitors_rating = 1
+	/// How powerful our shot actually is.
+	var/current_microlaser_rating = 1
+	/// The crank time on our gun. Determined by capacitor rating.
+	var/crank_time = 4 SECONDS
+	/// The multiplier for charge rate. This actually goes down as we go up in capacitor rating.
+	var/current_charge_amount = 0.5
+	/// Var to add a special prefix before any construction defining prefixes.
+	var/special_prefix = ""
+	/// The base name of our weapon
+	var/base_name = "laser musket"
 
 /obj/item/gun/energy/laser/musket/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/two_handed, require_twohands = TRUE, force_wielded = 10)
 	AddComponent( \
 		/datum/component/crank_recharge, \
 		charging_cell = get_cell(), \
-		charge_amount = STANDARD_CELL_CHARGE * 0.5, \
-		cooldown_time = 2 SECONDS, \
+		charge_amount = STANDARD_CELL_CHARGE * current_charge_amount, \
+		cooldown_time = crank_time, \
 		charge_sound = 'sound/weapons/laser_crank.ogg', \
 		charge_sound_cooldown_time = 1.8 SECONDS, \
 	)
 
 /obj/item/gun/energy/laser/musket/update_icon_state()
 	inhand_icon_state = "[initial(inhand_icon_state)][(get_charge_ratio() == 4 ? "charged" : "")]"
+	return ..()
+
+/obj/item/gun/energy/laser/musket/CheckParts(list/parts_list)
+	var/obj/item/stock_parts/capacitor/our_capacitor = locate(/obj/item/stock_parts/capacitor) in parts_list
+	var/obj/item/stock_parts/micro_laser/our_micro_laser = locate(/obj/item/stock_parts/micro_laser) in parts_list
+
+	var/capacitor_rating = 1
+	if(our_capacitor)
+		capacitor_rating = our_capacitor.rating
+		parts_list -= our_capacitor
+		qdel(our_capacitor)
+
+	var/micro_laser_rating = 1
+	if(our_micro_laser)
+		micro_laser_rating = our_micro_laser.rating
+		parts_list -= our_micro_laser
+		qdel(our_micro_laser)
+
+	var/capacitor_prefix = ""
+	var/micro_laser_prefix = ""
+
+	switch(capacitor_rating)
+		if(4)
+			capacitor_prefix = "quadratic "
+		if(3)
+			capacitor_prefix = "super "
+		if(2)
+			capacitor_prefix = "advanced "
+		if(1)
+			capacitor_prefix = ""
+
+	switch(micro_laser_rating)
+		if(4)
+			micro_laser_prefix = "quad-ultra-"
+		if(3)
+			micro_laser_prefix = "ultra-high-power-"
+		if(2)
+			micro_laser_prefix = "high-power-"
+		if(1)
+			micro_laser_prefix = ""
+
+	if(capacitor_rating > current_capacitors_rating)
+		var/capacitor_rating_differential = capacitor_rating - current_capacitors_rating
+		crank_time -= capacitor_rating_differential * 10
+		var/datum/component/crank_recharge/our_crank = GetComponent(/datum/component/crank_recharge)
+		our_crank.cooldown_time = crank_time
+
+	if(micro_laser_rating > current_microlaser_rating)
+		var/micro_laser_rating_differential = (micro_laser_rating - current_microlaser_rating) / 2
+		projectile_damage_multiplier += micro_laser_rating_differential
+		current_charge_amount -= micro_laser_rating_differential * 0.1
+		var/datum/component/crank_recharge/our_crank = GetComponent(/datum/component/crank_recharge)
+		our_crank.charge_amount = STANDARD_CELL_CHARGE * current_charge_amount
+
+	name = "[special_prefix][capacitor_prefix][micro_laser_prefix][base_name]"
+
+	current_capacitors_rating = capacitor_rating
+	current_microlaser_rating = micro_laser_rating
+
 	return ..()
 
 /obj/item/gun/energy/laser/musket/prime
@@ -34,7 +104,14 @@
 	inhand_icon_state = "musket_prime"
 	worn_icon_state = "las_musket_prime"
 	ammo_type = list(/obj/item/ammo_casing/energy/laser/musket/prime)
+	special_prefix = "heroic "
 
+/obj/item/gun/energy/laser/musket/prime/max_rating
+	projectile_damage_multiplier = 2.5
+	current_capacitors_rating = 4
+	current_microlaser_rating = 4
+	crank_time = 1 SECONDS
+	current_charge_amount = 0.3
 
 /obj/item/gun/energy/disabler/smoothbore
 	name = "smoothbore disabler"
