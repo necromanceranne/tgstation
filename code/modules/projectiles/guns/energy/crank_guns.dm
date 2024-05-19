@@ -69,11 +69,11 @@
 
 	switch(micro_laser_rating)
 		if(4)
-			micro_laser_prefix = "quad-ultra-"
+			micro_laser_prefix = "quantum "
 		if(3)
-			micro_laser_prefix = "ultra-high-power-"
+			micro_laser_prefix = "ultra "
 		if(2)
-			micro_laser_prefix = "high-power-"
+			micro_laser_prefix = "empowered "
 		if(1)
 			micro_laser_prefix = ""
 
@@ -97,6 +97,30 @@
 
 	return ..()
 
+/obj/item/gun/energy/laser/musket/tier_2
+	name = "advanced empowered laser musket"
+	projectile_damage_multiplier = 1.5
+	current_capacitors_rating = 2
+	current_microlaser_rating = 2
+	crank_time = 3 SECONDS
+	current_charge_amount = 0.4
+
+/obj/item/gun/energy/laser/musket/tier_3
+	name = "super ultra laser musket"
+	projectile_damage_multiplier = 2
+	current_capacitors_rating = 3
+	current_microlaser_rating = 3
+	crank_time = 2 SECONDS
+	current_charge_amount = 0.3
+
+/obj/item/gun/energy/laser/musket/tier_4
+	name = "quadratic quantum laser musket"
+	projectile_damage_multiplier = 2.5
+	current_capacitors_rating = 4
+	current_microlaser_rating = 4
+	crank_time = 1 SECONDS
+	current_charge_amount = 0.2
+
 /obj/item/gun/energy/laser/musket/prime
 	name = "heroic laser musket"
 	desc = "A well-engineered, hand-charged laser weapon. Its capacitors hum with potential."
@@ -106,12 +130,29 @@
 	ammo_type = list(/obj/item/ammo_casing/energy/laser/musket/prime)
 	special_prefix = "heroic "
 
-/obj/item/gun/energy/laser/musket/prime/max_rating
+/obj/item/gun/energy/laser/musket/prime/tier_2
+	name = "heroic advanced empowered laser musket"
+	projectile_damage_multiplier = 1.5
+	current_capacitors_rating = 2
+	current_microlaser_rating = 2
+	crank_time = 3 SECONDS
+	current_charge_amount = 0.4
+
+/obj/item/gun/energy/laser/musket/prime/tier_3
+	name = "heroic super ultra laser musket"
+	projectile_damage_multiplier = 2
+	current_capacitors_rating = 3
+	current_microlaser_rating = 3
+	crank_time = 2 SECONDS
+	current_charge_amount = 0.3
+
+/obj/item/gun/energy/laser/musket/prime/tier_4
+	name = "heroic quadratic quantum laser musket"
 	projectile_damage_multiplier = 2.5
 	current_capacitors_rating = 4
 	current_microlaser_rating = 4
 	crank_time = 1 SECONDS
-	current_charge_amount = 0.3
+	current_charge_amount = 0.2
 
 /obj/item/gun/energy/disabler/smoothbore
 	name = "smoothbore disabler"
