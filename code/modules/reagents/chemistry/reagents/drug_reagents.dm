@@ -164,10 +164,18 @@
 /datum/reagent/drug/methamphetamine/on_mob_metabolize(mob/living/affected_mob)
 	. = ..()
 	affected_mob.add_movespeed_modifier(/datum/movespeed_modifier/reagent/methamphetamine)
+	if(ishuman(affected_mob))
+		var/mob/living/carbon/human/affected_human = affected_mob
+		var/datum/physiology/affected_physiology = affected_human.physiology
+		affected_physiology.stamina_mod *= 0.8
 
 /datum/reagent/drug/methamphetamine/on_mob_end_metabolize(mob/living/affected_mob)
 	. = ..()
 	affected_mob.remove_movespeed_modifier(/datum/movespeed_modifier/reagent/methamphetamine)
+	if(ishuman(affected_mob))
+		var/mob/living/carbon/human/affected_human = affected_mob
+		var/datum/physiology/affected_physiology = affected_human.physiology
+		affected_physiology.stamina_mod *= 1.25
 
 /datum/reagent/drug/methamphetamine/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
@@ -261,6 +269,20 @@
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 	addiction_types = list(/datum/addiction/stimulants = 8)
 	metabolized_traits = list(TRAIT_STIMULATED)
+
+/datum/reagent/drug/aranesp/on_mob_metabolize(mob/living/affected_mob)
+	. = ..()
+	if(ishuman(affected_mob))
+		var/mob/living/carbon/human/affected_human = affected_mob
+		var/datum/physiology/affected_physiology = affected_human.physiology
+		affected_physiology.stamina_mod *= 0.5
+
+/datum/reagent/drug/aranesp/on_mob_end_metabolize(mob/living/affected_mob)
+	. = ..()
+	if(ishuman(affected_mob))
+		var/mob/living/carbon/human/affected_human = affected_mob
+		var/datum/physiology/affected_physiology = affected_human.physiology
+		affected_physiology.stamina_mod *= 2
 
 /datum/reagent/drug/aranesp/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
@@ -817,14 +839,18 @@
 	kronkaine_fiend.remove_actionspeed_modifier(/datum/actionspeed_modifier/kronkaine)
 	kronkaine_fiend.sound_environment_override = NONE
 
-/datum/reagent/drug/kronkaine/on_transfer(atom/kronkaine_receptacle, methods, trans_volume)
+/datum/reagent/drug/kronkaine/expose_mob(mob/living/kronkaine_receptacle, methods=TOUCH, reac_volume)
 	. = ..()
-	if(!iscarbon(kronkaine_receptacle))
+	if(!ishuman(kronkaine_receptacle))
 		return
-	var/mob/living/carbon/druggo = kronkaine_receptacle
-	if(druggo.adjustStaminaLoss(-6 * trans_volume, updating_stamina = FALSE))
-		return UPDATE_MOB_HEALTH
-	//I wish i could give it some kind of bonus when smoked, but we don't have an INHALE method.
+	var/mob/living/carbon/human/kronkhead = kronkaine_receptacle
+	if(methods & INHALE) //True kronkheads smoke it
+		var/kronk_makes_me_move = kronkhead.adjustStaminaLoss(-6 * reac_volume, updating_stamina = FALSE)
+		var/kronk_makes_the_bruises_disappear = kronkhead.adjustBruteLoss(-2 * reac_volume, updating_health = FALSE, required_bodytype = affected_bodytype)
+		var/kronk_makes_the_burns_go_away = kronkhead.adjustFireLoss(-2 * reac_volume, updating_health = FALSE, required_bodytype = affected_bodytype)
+		var/kronk_makes_me_feel_great = (kronk_makes_me_move + kronk_makes_the_bruises_disappear + kronk_makes_the_burns_go_away)
+		if(kronk_makes_me_feel_great)
+			kronkhead.updatehealth()
 
 /datum/reagent/drug/kronkaine/on_mob_life(mob/living/carbon/kronkaine_fiend, seconds_per_tick, times_fired)
 	. = ..()

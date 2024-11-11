@@ -587,10 +587,18 @@
 	affected_mob.add_movespeed_modifier(/datum/movespeed_modifier/reagent/ephedrine)
 	var/purity_movespeed_accounting = -0.375 * normalise_creation_purity()
 	affected_mob.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/reagent/ephedrine, TRUE, purity_movespeed_accounting)
+	if(ishuman(affected_mob))
+		var/mob/living/carbon/human/affected_human = affected_mob
+		var/datum/physiology/affected_physiology = affected_human.physiology
+		affected_physiology.stamina_mod *= 0.8
 
 /datum/reagent/medicine/ephedrine/on_mob_end_metabolize(mob/living/affected_mob)
 	. = ..()
 	affected_mob.remove_movespeed_modifier(/datum/movespeed_modifier/reagent/ephedrine)
+	if(ishuman(affected_mob))
+		var/mob/living/carbon/human/affected_human = affected_mob
+		var/datum/physiology/affected_physiology = affected_human.physiology
+		affected_physiology.stamina_mod *= 1.25
 
 /datum/reagent/medicine/ephedrine/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
@@ -1147,10 +1155,18 @@
 /datum/reagent/medicine/stimulants/on_mob_metabolize(mob/living/affected_mob)
 	. = ..()
 	affected_mob.add_movespeed_modifier(/datum/movespeed_modifier/reagent/stimulants)
+	if(ishuman(affected_mob))
+		var/mob/living/carbon/human/affected_human = affected_mob
+		var/datum/physiology/affected_physiology = affected_human.physiology
+		affected_physiology.stamina_mod *= 0.5
 
 /datum/reagent/medicine/stimulants/on_mob_end_metabolize(mob/living/affected_mob)
 	. = ..()
 	affected_mob.remove_movespeed_modifier(/datum/movespeed_modifier/reagent/stimulants)
+	if(ishuman(affected_mob))
+		var/mob/living/carbon/human/affected_human = affected_mob
+		var/datum/physiology/affected_physiology = affected_human.physiology
+		affected_physiology.stamina_mod *= 2
 
 /datum/reagent/medicine/stimulants/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
