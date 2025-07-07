@@ -147,6 +147,17 @@
 	select_name = "cryo"
 	firing_effect_type = /obj/effect/temp_visual/dir_setting/firing_effect/blue
 
+/obj/item/ammo_casing/energy/nanite/inferno/lever
+	projectile_type = /obj/projectile/energy/inferno
+	select_name = "kill"
+	e_cost = LASER_SHOTS(1, STANDARD_CELL_CHARGE)
+
+/obj/item/ammo_casing/energy/nanite/cryo/lever
+	projectile_type = /obj/projectile/energy/cryo
+	select_name = "disable"
+	firing_effect_type = /obj/effect/temp_visual/dir_setting/firing_effect/blue
+	e_cost = LASER_SHOTS(1, STANDARD_CELL_CHARGE)
+
 ///not exactly an energy ammo casing, but it's used by the laser gatling.
 /obj/item/ammo_casing/laser
 	name = "laser casing"

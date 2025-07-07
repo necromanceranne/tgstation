@@ -87,6 +87,12 @@
 	obj_flags = UNIQUE_RENAME
 	w_class = WEIGHT_CLASS_NORMAL
 	dual_wield_spread = 5 //as intended by the coders
+	// How much of the cell we recharge per 'crank'.
+	var/cell_recharge_amount = LASER_SHOTS(8, STANDARD_CELL_CHARGE)
+	// The interaction delay before we crank the gun.
+	var/recharge_time =  0.8 SECONDS
+	// Whether or not we spin our gun
+	var/spin_the_gun = TRUE
 
 /obj/item/gun/energy/laser/thermal/add_bayonet_point()
 	AddComponent(/datum/component/bayonet_attachable, offset_x = 19, offset_y = 13)
@@ -97,9 +103,9 @@
 	AddComponent( \
 		/datum/component/crank_recharge, \
 		charging_cell = get_cell(), \
-		spin_to_win = TRUE, \
-		charge_amount = LASER_SHOTS(8, STANDARD_CELL_CHARGE), \
-		cooldown_time = 0.8 SECONDS, \
+		spin_to_win = spin_the_gun, \
+		charge_amount = cell_recharge_amount, \
+		cooldown_time = recharge_time, \
 		charge_sound = 'sound/items/weapons/kinetic_reload.ogg', \
 		charge_sound_cooldown_time = 0.8 SECONDS, \
 	)
@@ -126,3 +132,35 @@
 		ammunition by manually spinning the weapon's nanite canister."
 	icon_state = "cryopistol"
 	ammo_type = list(/obj/item/ammo_casing/energy/nanite/cryo)
+
+/obj/item/gun/energy/laser/thermal/lever
+	icon_state = "energy"
+	ammo_type = list(/obj/item/ammo_casing/energy/nanite/inferno/lever, /obj/item/ammo_casing/energy/nanite/cryo/lever)
+	w_class = WEIGHT_CLASS_BULKY
+	weapon_weight = WEAPON_HEAVY
+	modifystate = TRUE
+	shaded_charge = FALSE
+	cell_recharge_amount = LASER_SHOTS(1, STANDARD_CELL_CHARGE)
+	recharge_time = 1 SECONDS
+	spin_the_gun = FALSE
+
+/obj/item/gun/energy/laser/thermal/lever/attack_self_secondary(mob/user, modifiers)
+	if(ammo_type.len > 1 && can_select)
+		select_fire(user)
+	return ..()
+
+/obj/item/gun/energy/laser/thermal/lever/interact_with_atom_secondary(atom/interacting_with, mob/living/user, list/modifiers)
+	if(user.combat_mode && isliving(interacting_with))
+		return ITEM_INTERACT_SKIP_TO_ATTACK // Gun bash / bayonet attack
+
+	if(ammo_type.len > 1 && can_select)
+		select_fire(user)
+		return ITEM_INTERACT_SUCCESS
+	return NONE
+
+/obj/item/gun/energy/laser/thermal/lever/ranged_interact_with_atom_secondary(atom/interacting_with, mob/living/user, list/modifiers)
+	if(ammo_type.len > 1 && can_select)
+		select_fire(user)
+		return ITEM_INTERACT_SUCCESS
+
+	return NONE
