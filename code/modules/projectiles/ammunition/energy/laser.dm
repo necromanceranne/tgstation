@@ -34,6 +34,7 @@
 
 /obj/item/ammo_casing/energy/laser/musket
 	projectile_type = /obj/projectile/beam/laser/musket
+	fire_sound = 'sound/magic/lightningbolt.ogg'
 	e_cost = LASER_SHOTS(1, STANDARD_CELL_CHARGE)
 
 /obj/item/ammo_casing/energy/laser/musket/prime

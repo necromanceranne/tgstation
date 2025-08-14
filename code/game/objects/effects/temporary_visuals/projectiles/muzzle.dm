@@ -23,6 +23,9 @@
 /obj/effect/projectile/muzzle/stun
 	icon_state = "muzzle_stun"
 
+/obj/effect/projectile/muzzle/heavy_stun
+	icon_state = "muzzle_bfg"
+
 /obj/effect/projectile/muzzle/heavy_laser
 	icon_state = "muzzle_beam_heavy"
 

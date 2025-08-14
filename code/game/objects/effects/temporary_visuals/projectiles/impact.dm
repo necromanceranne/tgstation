@@ -30,6 +30,10 @@
 	name = "stun impact"
 	icon_state = "impact_stun"
 
+/obj/effect/projectile/impact/heavy_stun
+	name = "heavy stun impact"
+	icon_state = "impact_bfg"
+
 /obj/effect/projectile/impact/heavy_laser
 	name = "heavy laser impact"
 	icon_state = "impact_beam_heavy"

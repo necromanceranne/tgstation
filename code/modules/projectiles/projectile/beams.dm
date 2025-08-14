@@ -66,17 +66,45 @@
 		impact_effect_type = /obj/effect/temp_visual/impact_effect/red_laser/wall
 
 /obj/projectile/beam/laser/musket
-	name = "low-power laser"
+	name = "lightning musket bolt"
 	icon_state = "laser_musket"
-	impact_effect_type = /obj/effect/temp_visual/impact_effect/purple_laser
-	damage = 20
-	stamina = 35
-	light_color = COLOR_STRONG_VIOLET
+	hitsound = 'sound/weapons/sear.ogg'
+	impact_effect_type = /obj/effect/temp_visual/impact_effect/yellow_laser
+	damage = 10
+	stamina = 60
+	light_color = COLOR_STRONG_YELLOW
+	hitscan = TRUE
+	muzzle_type = /obj/effect/projectile/muzzle/laser/stun
+	tracer_type = /obj/effect/projectile/tracer/laser/stun
+	impact_type = /obj/effect/projectile/impact/laser/stun
+	hitscan_light_intensity = 3
+	hitscan_light_range = 0.75
+	hitscan_light_color_override = COLOR_STRONG_YELLOW
+	muzzle_flash_intensity = 6
+	muzzle_flash_range = 2
+	muzzle_flash_color_override = CCOLOR_STRONG_YELLOW
+	impact_light_intensity = 7
+	impact_light_range = 2.5
+	impact_light_color_override = COLOR_STRONG_YELLOW
+
+/obj/projectile/beam/laser/musket/on_hit(atom/target, blocked = 0, pierce_hit)
+	. = ..()
+	if(isliving(target))
+		var/mob/living/victim = target
+		victim.electrocute_act(damage, src, siemens_coeff = 1, flags = SHOCK_NOSTUN|SHOCK_TESLA)
 
 /obj/projectile/beam/laser/musket/prime
-	name = "mid-power laser"
-	damage = 30
-	stamina = 45
+	name = "slaying lightning musket bolt"
+	damage = 20
+	stamina = 80
+	impact_effect_type = /obj/effect/temp_visual/impact_effect/green_laser
+	light_color = COLOR_GREEN
+	muzzle_type = /obj/effect/projectile/muzzle/laser/heavy_stun
+	muzzle_flash_color_override = CCOLOR_GREEN
+	tracer_type = /obj/effect/projectile/tracer/laser/heavy_stun
+	hitscan_light_color_override = COLOR_GREEN
+	impact_type = /obj/effect/projectile/impact/laser/heavy_stun
+	impact_light_color_override = COLOR_GREEN
 
 /obj/projectile/beam/weak
 	damage = 15

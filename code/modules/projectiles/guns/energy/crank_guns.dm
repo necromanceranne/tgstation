@@ -1,6 +1,6 @@
 /obj/item/gun/energy/laser/musket
-	name = "laser musket"
-	desc = "A hand-crafted laser weapon, it has a hand crank on the side to charge it up."
+	name = "lightning musket"
+	desc = "The power of Zeus himself in your hands."
 	icon_state = "musket"
 	inhand_icon_state = "musket"
 	worn_icon_state = "las_musket"
@@ -12,11 +12,9 @@
 	knife_y_offset = 11
 	/// How quickly our musket charges up.
 	var/current_capacitors_rating = 1
-	/// How powerful our shot actually is.
-	var/current_microlaser_rating = 1
 	/// The crank time on our gun. Determined by capacitor rating.
 	var/crank_time = 4 SECONDS
-	/// The multiplier for charge rate. This actually goes down as we go up in capacitor rating.
+	/// The multiplier for charge rate.
 	var/current_charge_amount = 0.5
 	/// Var to add a special prefix before any construction defining prefixes.
 	var/special_prefix = ""
@@ -40,7 +38,6 @@
 
 /obj/item/gun/energy/laser/musket/CheckParts(list/parts_list)
 	var/obj/item/stock_parts/capacitor/our_capacitor = locate(/obj/item/stock_parts/capacitor) in parts_list
-	var/obj/item/stock_parts/micro_laser/our_micro_laser = locate(/obj/item/stock_parts/micro_laser) in parts_list
 
 	var/capacitor_rating = 1
 	if(our_capacitor)
@@ -48,14 +45,7 @@
 		parts_list -= our_capacitor
 		qdel(our_capacitor)
 
-	var/micro_laser_rating = 1
-	if(our_micro_laser)
-		micro_laser_rating = our_micro_laser.rating
-		parts_list -= our_micro_laser
-		qdel(our_micro_laser)
-
 	var/capacitor_prefix = ""
-	var/micro_laser_prefix = ""
 
 	switch(capacitor_rating)
 		if(4)
@@ -67,59 +57,32 @@
 		if(1)
 			capacitor_prefix = ""
 
-	switch(micro_laser_rating)
-		if(4)
-			micro_laser_prefix = "quantum "
-		if(3)
-			micro_laser_prefix = "ultra "
-		if(2)
-			micro_laser_prefix = "empowered "
-		if(1)
-			micro_laser_prefix = ""
-
 	if(capacitor_rating > current_capacitors_rating)
 		var/capacitor_rating_differential = capacitor_rating - current_capacitors_rating
 		crank_time -= capacitor_rating_differential * 10
 		var/datum/component/crank_recharge/our_crank = GetComponent(/datum/component/crank_recharge)
 		our_crank.cooldown_time = crank_time
 
-	if(micro_laser_rating > current_microlaser_rating)
-		var/micro_laser_rating_differential = (micro_laser_rating - current_microlaser_rating) / 2
-		projectile_damage_multiplier += micro_laser_rating_differential
-		current_charge_amount -= micro_laser_rating_differential * 0.1
-		var/datum/component/crank_recharge/our_crank = GetComponent(/datum/component/crank_recharge)
-		our_crank.charge_amount = STANDARD_CELL_CHARGE * current_charge_amount
-
-	name = "[special_prefix][capacitor_prefix][micro_laser_prefix][base_name]"
+	name = "[special_prefix][capacitor_prefix][base_name]"
 
 	current_capacitors_rating = capacitor_rating
-	current_microlaser_rating = micro_laser_rating
 
 	return ..()
 
 /obj/item/gun/energy/laser/musket/tier_2
-	name = "advanced empowered laser musket"
-	projectile_damage_multiplier = 1.5
+	name = "advanced laser musket"
 	current_capacitors_rating = 2
-	current_microlaser_rating = 2
 	crank_time = 3 SECONDS
-	current_charge_amount = 0.4
 
 /obj/item/gun/energy/laser/musket/tier_3
-	name = "super ultra laser musket"
-	projectile_damage_multiplier = 2
+	name = "super laser musket"
 	current_capacitors_rating = 3
-	current_microlaser_rating = 3
 	crank_time = 2 SECONDS
-	current_charge_amount = 0.3
 
 /obj/item/gun/energy/laser/musket/tier_4
-	name = "quadratic quantum laser musket"
-	projectile_damage_multiplier = 2.5
+	name = "quadratic laser musket"
 	current_capacitors_rating = 4
-	current_microlaser_rating = 4
 	crank_time = 1 SECONDS
-	current_charge_amount = 0.2
 
 /obj/item/gun/energy/laser/musket/prime
 	name = "heroic laser musket"
@@ -129,30 +92,22 @@
 	worn_icon_state = "las_musket_prime"
 	ammo_type = list(/obj/item/ammo_casing/energy/laser/musket/prime)
 	special_prefix = "heroic "
+	current_charge_amount = 1
 
 /obj/item/gun/energy/laser/musket/prime/tier_2
-	name = "heroic advanced empowered laser musket"
-	projectile_damage_multiplier = 1.5
+	name = "heroic advanced laser musket"
 	current_capacitors_rating = 2
-	current_microlaser_rating = 2
 	crank_time = 3 SECONDS
-	current_charge_amount = 0.4
 
 /obj/item/gun/energy/laser/musket/prime/tier_3
-	name = "heroic super ultra laser musket"
-	projectile_damage_multiplier = 2
+	name = "heroic super laser musket"
 	current_capacitors_rating = 3
-	current_microlaser_rating = 3
 	crank_time = 2 SECONDS
-	current_charge_amount = 0.3
 
 /obj/item/gun/energy/laser/musket/prime/tier_4
-	name = "heroic quadratic quantum laser musket"
-	projectile_damage_multiplier = 2.5
+	name = "heroic quadratic laser musket"
 	current_capacitors_rating = 4
-	current_microlaser_rating = 4
 	crank_time = 1 SECONDS
-	current_charge_amount = 0.2
 
 /obj/item/gun/energy/disabler/smoothbore
 	name = "smoothbore disabler"
