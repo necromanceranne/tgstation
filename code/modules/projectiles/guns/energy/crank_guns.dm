@@ -147,14 +147,14 @@
 	)
 	dischage()
 
-/obj/item/gun/energy/laser/discharge_on_drop/equipped(mob/user)
+/obj/item/gun/energy/laser/discharge_on_drop/equipped(mob/user, slot, initial)
 	. = ..()
 	if(slot != ITEM_SLOT_HANDS)
 		dischage()
 
 /obj/item/gun/energy/laser/discharge_on_drop/dropped()
 	. = ..()
-	if(!QDELING(src) && !holds_charge)
+	if(!QDELING(src))
 		//borrowed from /obj/item/gun/energy/recharge/dropped, as explained there,
 		//Put it on a delay because moving item from slot to hand
 		// calls dropped().
