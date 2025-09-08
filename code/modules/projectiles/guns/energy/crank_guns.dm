@@ -127,3 +127,45 @@
 		ammunition by manually spinning the weapon's nanite canister."
 	icon_state = "cryopistol"
 	ammo_type = list(/obj/item/ammo_casing/energy/nanite/cryo)
+
+/obj/item/gun/energy/laser/discharge_on_drop
+	name = "laser gun but it discharges when you drop it and only shoots once"
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/musket)
+	/// An ID for our drop discharge timer.
+	var/drop_discharge_timerid
+
+/obj/item/gun/energy/laser/discharge_on_drop/Initialize(mapload)
+	. = ..()
+	AddComponent( \
+		/datum/component/crank_recharge, \
+		charging_cell = get_cell(), \
+		charge_amount = STANDARD_CELL_CHARGE, \
+		cooldown_time = 0.5 SECONDS, \
+		charge_sound = 'sound/items/weapons/gun/bow/bow_draw.ogg', \
+		charge_sound_cooldown_time = 0.5 SECONDS, \
+		charge_move = IGNORE_USER_LOC_CHANGE, \
+	)
+	dischage()
+
+/obj/item/gun/energy/laser/discharge_on_drop/equipped(mob/user)
+	. = ..()
+	if(slot != ITEM_SLOT_HANDS)
+		dischage()
+
+/obj/item/gun/energy/laser/discharge_on_drop/dropped()
+	. = ..()
+	if(!QDELING(src) && !holds_charge)
+		//borrowed from /obj/item/gun/energy/recharge/dropped, as explained there,
+		//Put it on a delay because moving item from slot to hand
+		// calls dropped().
+		addtimer(CALLBACK(src, PROC_REF(discharge_if_not_held)), 0.1 SECONDS)
+
+/obj/item/gun/energy/laser/discharge_on_drop/proc/empty_if_not_held()
+	if(!ismob(loc))
+		discharge()
+		deltimer(drop_discharge_timerid)
+
+/obj/item/gun/energy/laser/discharge_on_drop/proc/discharge()
+	if(cell)
+		cell.use(cell.charge)
+	update_appearance()
