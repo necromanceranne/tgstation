@@ -160,7 +160,7 @@
 		// calls dropped().
 		addtimer(CALLBACK(src, PROC_REF(discharge_if_not_held)), 0.1 SECONDS)
 
-/obj/item/gun/energy/laser/discharge_on_drop/proc/empty_if_not_held()
+/obj/item/gun/energy/laser/discharge_on_drop/proc/discharge_if_not_held()
 	if(!ismob(loc))
 		discharge()
 		deltimer(drop_discharge_timerid)
