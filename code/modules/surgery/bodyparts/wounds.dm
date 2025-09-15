@@ -61,17 +61,21 @@
 	var/hardly_wounded = HAS_TRAIT(owner, TRAIT_HARDLY_WOUNDED)
 	if(easily_wounded && !hardly_wounded)
 		damage *= 1.5
+		wound_bonus *= 1.5
 	else
 		damage = min(damage, WOUND_MAX_CONSIDERED_DAMAGE)
 
 	if(hardly_wounded && !easily_wounded)
-		damage *= 0.85
+		damage /= 2
+		wound_bonus /= 2
 
 	if(HAS_TRAIT(owner, TRAIT_EASYDISMEMBER) && !HAS_TRAIT(owner, TRAIT_NODISMEMBER))
 		damage *= 1.1
+		wound_bonus *= 1.1
 
 	if(HAS_TRAIT(owner, TRAIT_EASYBLEED) && owner.can_bleed() && ((woundtype == WOUND_PIERCE) || (woundtype == WOUND_SLASH)))
 		damage *= 1.5
+		wound_bonus *= 1.5
 
 	var/base_roll = rand(1, round(damage ** WOUND_DAMAGE_EXPONENT))
 	var/injury_roll = base_roll
