@@ -46,19 +46,20 @@
 
 /obj/item/cursed_katana
 	name = "cursed katana"
-	desc = "A katana used to seal something vile away long ago. \
-	Even with the weapon destroyed, all the pieces containing the creature have coagulated back together to find a new host."
+	desc = "A katana used to seal something vile away long ago. Even with the weapon destroyed, all the pieces containing \
+		the creature have coagulated back together to find a new host."
 	icon = 'icons/obj/mining_zones/artefacts.dmi'
 	icon_state = "cursed_katana"
 	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
-	force = 15
+	force = 10
 	armour_penetration = 30
-	block_chance = 30
+	block_chance = 50
 	block_sound = 'sound/items/weapons/parry.ogg'
 	sharpness = SHARP_EDGED
 	w_class = WEIGHT_CLASS_HUGE
+	obj_flags = UNIQUE_RENAME
 	attack_verb_continuous = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts")
 	attack_verb_simple = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
@@ -75,6 +76,10 @@
 	)
 	var/list/alt_continuous = list("stabs", "pierces", "impales")
 	var/list/alt_simple = list("stab", "pierce", "impale")
+	/// Handler for counter attack cooldown
+	COOLDOWN_DECLARE(retaliation_cooldown)
+	/// Cooldown time between retaliations
+	var/retaliation_cooldown_time = 5 SECONDS
 
 /obj/item/cursed_katana/Initialize(mapload)
 	. = ..()
@@ -93,6 +98,9 @@
 /obj/item/cursed_katana/examine(mob/user)
 	. = ..()
 	. += drew_blood ? span_nicegreen("It's sated... for now.") : span_danger("It will not be sated until it tastes blood.")
+	. += span_danger("You have the strangest feeling that the blade will reward your recklessness with greater strength as \
+		long as you confront your enemies face to face. It seems to want to see the life drain from an opponents with every bite. \
+		Gnarly.")
 
 /obj/item/cursed_katana/dropped(mob/user)
 	. = ..()
@@ -102,13 +110,49 @@
 /obj/item/cursed_katana/attack(mob/living/target, mob/user, list/modifiers, list/attack_modifiers)
 	if(target.stat < DEAD && target != user)
 		drew_blood = TRUE
-		if(ismining(target))
-			user.changeNext_move(CLICK_CD_RAPID)
 	return ..()
 
 /obj/item/cursed_katana/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
-	if(attack_type == (PROJECTILE_ATTACK || LEAP_ATTACK || OVERWHELMING_ATTACK))
-		final_block_chance = 0 //Don't bring a sword to a gunfight, and also you aren't going to really block someone full body tackling you with a sword. Or a road roller, if one happened to hit you.
+	if(attack_type == OVERWHELMING_ATTACK)
+		final_block_chance /= 2 //Don't bring a cursed katana to a...road roller fight?
+
+	var/mob/living/attacker = hitby
+	if(!istype(attacker))
+		return ..()
+
+	if(!ismining(attacker))
+		final_block_chance += 25
+		return ..()
+
+/obj/item/cursed_katana/pre_attack(atom/target, mob/living/user, list/modifiers, list/attack_modifiers)
+	if(!isliving(target))
+		return ..()
+	var/mob/living/living_target = target
+	var/vital_strike = 0
+	var/crit_roll = roll("1d20")
+	var/confirm_bonus = 0
+	if(can_combo_attack(user, living_target) && !check_behind(user, living_target)) //No craven fighting today, friend, we fight HEAD ON
+		if(ishuman(user))
+			var/mob/living/carbon/human/human_user = user
+			var/obj/item/bodypart/wielding_bodypart = human_user.get_active_hand()
+			vital_strike = round((wielding_bodypart.unarmed_damage_low + wielding_bodypart.unarmed_damage_high) * 0.5, 1)
+			confirm_bonus = round(wielding_bodypart.unarmed_effectiveness/10, 1)
+		else
+			vital_strike += 4
+
+	if(HAS_TRAIT(user, TRAIT_STRENGTH))
+		vital_strike += 2
+
+	if(ismining(living_target))
+		vital_strike *= 2
+
+	if(crit_roll >= 18)
+		var/confirm_crit = roll("1d20") + confirm_bonus
+		if(confirm_crit >= 18)
+			vital_strike *= 2
+			new /obj/effect/temp_visual/crit(get_turf(target))
+
+	MODIFY_ATTACK_FORCE(attack_modifiers, vital_strike)
 	return ..()
 
 /obj/item/cursed_katana/proc/can_combo_attack(mob/user, mob/living/target)
@@ -122,7 +166,7 @@
 	RegisterSignal(target, COMSIG_MOVABLE_IMPACT, PROC_REF(strike_throw_impact))
 	var/atom/throw_target = get_edge_target_turf(target, user.dir)
 	target.throw_at(throw_target, 5, 3, user, FALSE, gentle = TRUE)
-	target.apply_damage(damage = 17, exposed_wound_bonus = 10)
+	target.apply_damage(force*2, wound_bonus = 10)
 	to_chat(target, span_userdanger("You've been struck by [user]!"))
 	user.do_attack_animation(target, ATTACK_EFFECT_PUNCH)
 
@@ -152,10 +196,12 @@
 		var/turf/turf = get_step(user_turf, turn(dir_to_target, iteration))
 		user.do_attack_animation(turf, ATTACK_EFFECT_SLASH)
 		for(var/mob/living/additional_target in turf)
+			if(!istype(additional_target) || additional_target == target)
+				continue
 			if(user.Adjacent(additional_target) && additional_target.density)
-				additional_target.apply_damage(damage = 15, sharpness = SHARP_EDGED, exposed_wound_bonus = 10)
+				additional_target.apply_damage(force, sharpness = SHARP_EDGED, exposed_wound_bonus = 10)
 				to_chat(additional_target, span_userdanger("You've been sliced by [user]!"))
-	target.apply_damage(damage = 5, sharpness = SHARP_EDGED, wound_bonus = 10)
+	target.apply_damage(force*2, sharpness = SHARP_EDGED, wound_bonus = 10)
 
 /obj/item/cursed_katana/proc/cloak(mob/living/target, mob/user)
 	user.alpha = 150
@@ -185,7 +231,7 @@
 		span_notice("You tendon cut [target]!"))
 	to_chat(target, span_userdanger("Your tendons have been cut by [user]!"))
 	user.do_item_attack_animation(target, used_item = src, animation_type = ATTACK_ANIMATION_SLASH)
-	target.apply_damage(damage = 15, sharpness = SHARP_EDGED, wound_bonus = 15)
+	target.apply_damage(force*2, sharpness = SHARP_EDGED, wound_bonus = 15)
 	user.do_attack_animation(target, ATTACK_EFFECT_DISARM)
 	playsound(src, 'sound/items/weapons/rapierhit.ogg', 50, TRUE)
 	var/datum/status_effect/stacking/saw_bleed/bloodletting/status = target.has_status_effect(/datum/status_effect/stacking/saw_bleed/bloodletting)
@@ -199,7 +245,7 @@
 		span_notice("You dash through [target]!"))
 	to_chat(target, span_userdanger("[user] dashes through you!"))
 	playsound(src, 'sound/effects/magic/blink.ogg', 50, TRUE)
-	target.apply_damage(damage = 17, sharpness = SHARP_POINTY, exposed_wound_bonus = 10)
+	target.apply_damage(force*2, sharpness = SHARP_POINTY, exposed_wound_bonus = 10)
 	var/turf/dash_target = get_turf(target)
 	for(var/distance in 0 to 8)
 		var/turf/current_dash_target = dash_target
@@ -216,13 +262,13 @@
 	user.visible_message(span_warning("[user] shatters [src] over [target]!"),
 		span_notice("You shatter [src] over [target]!"))
 	to_chat(target, span_userdanger("[user] shatters [src] over you!"))
-	target.apply_damage(damage = ismining(target) ? 75 : 35, wound_bonus = 20)
+	target.apply_damage(damage = clamp((ismining(target) ? 75 : 35), 0, 100), wound_bonus = 20)
 	user.do_attack_animation(target, ATTACK_EFFECT_SMASH)
 	playsound(src, 'sound/effects/glass/glassbr3.ogg', 100, TRUE)
 	shattered = TRUE
 	moveToNullspace()
 	balloon_alert(user, "katana shattered")
-	addtimer(CALLBACK(src, PROC_REF(coagulate), user), 45 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(coagulate), user), 10 SECONDS)
 
 /obj/item/cursed_katana/proc/coagulate(mob/user)
 	balloon_alert(user, "katana coagulated")
