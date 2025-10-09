@@ -139,18 +139,15 @@
 		a rich history throughout human, Mothic and Tiziran history.<br>\
 		<br>\
 		Some of the earliest conflicts in which laser muskets emerged include the Battle of Bey-Lorn 7, the Siege of Redscale's \
-		Orbital Keep, and the Diaspora Wars of 2437. In many of these examples, laser muskets started to emerge when conventional \
+		Orbital Keep, and the Shattering Wars of 2437. In many of these examples, laser muskets started to emerge when conventional \
 		weaponry or ammunition started to grow scarcer, and the amount of scrap electronics and materials outpaced the speed at \
 		which engineering crews could repair structural defenses and infrastructure. They're regarded as weapons of extreme \
 		desperation, but also of unmatched grit in the face of a hopeless situation. <br>\
 		<br>\
-		Some engineering crews, hunched beneath the orange glow of fluorescent bulbs in quiet corners of maintenance, still tell the tale \
-		of the SS Brunswick, who, at the cost of their own lives, managed to turn their flux capacitors into an oversized laser cannon and \
-		repel Baron Redscale's interceptor fleets long enough for the rest of the rebel forces to make a decisive assault on the keep. <br>\
+		Constructing one of these is sometimes seen as a rite of passage amongst militia groups and rebel forces. Each one as unique \
+		as the next. <br>\
 		<br>\
-		Constructing one of these is sometimes seen as a rite of passage amongst militia groups. Each one as unique as the next. <br>\
-		<br>\
-		What will this one's name be? What history will it write? Who can say." \
+		What will this one's name be? What history will it write? Time will surely tell." \
 	)
 
 // Thermal Pistols
@@ -158,10 +155,14 @@
 /obj/item/gun/energy/laser/thermal/add_deep_lore()
 	AddElement(/datum/element/examine_lore, \
 		lore_hint = span_notice("You can [EXAMINE_HINT("look closer")] to learn a little more about [src]."), \
-		lore = "Very few people truly know the exact origins of the thermal pistol. While it is an offering within Nanotrasen's \
-		arsenal as a personal defense weapon, they never truly patented the weapon as their own. Presumably, the weapon exists \
-		in a kind of copyright limbo, with no one company able to confidently claim ownship, as there exists numerous legal \
-		documentation to contradict Nanotrasen's ownership within a TerraGov court of law.<br>\
+		lore = "An example of a weapon with no true owner, the typical examples of thermal pistols vary heavily based on the \
+		manufacturer. However, the original inventor of the thermal pistol is largely clouded in mystery. Replica versions of \
+		the pistol were circulating long before weaponized nanites were banned by the TerraGov Subdermal Weapons Accord, \
+		and have continued to exist as a means of disposing of the self-replicating stocks of weaponized nanites.<br>\
+		<br>\
+		This is an example of Nanotrasen's Viper Classic model, based on earlier models of the weapon in appearance, but using \
+		up to date nanite breeding chambers that respond to user articulation. That is, the weapons can be charged with a vigorous \
+		shake. Though most users prefer to use the custom trick triggerguard to twirl them on their finger. Mostly for showmanship. <br>\
 		<br>\
 		Due to various movies and television programs, or perhaps spacer legends of fancy, the weapons are often associated with the \
 		'Space Rangers' that roam the periphery and Australicus regions of space. Polarizing tales of rugged gun fighters roaming \
@@ -171,6 +172,5 @@
 		ruthless villainry. Using these weapons today is largely seen as a way to evoke this imagery, even if it comes across \
 		as mildly tacky. <br>\
 		<br>\
-		It isn't fully understood who started the practice of 'pairing' the pistols. Perhaps some things are better left a mystery. As \
-		much of a mystery as to how all these weaponized nanites ended up in the hands of frontier space rangers." \
+		It isn't fully understood who started the practice of 'pairing' the pistols." \
 	)
