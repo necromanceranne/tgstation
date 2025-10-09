@@ -287,7 +287,7 @@
 		to feed the earnings.<br>\
 		<br>\
 		The Type 2 was rushed onto the market within the next quarter, even before most common safety mechanisms had been properly tested and implemented.\
-		Reports immediately began flooding in of horrific accidental discharge accidents, battlefield atrocities and unexpected spontaneous combustion \
+		Reports immediately began flooding in of horrific accidental dischargess, battlefield atrocities and unexpected spontaneous combustion \
 		from excessive exposure to the untested experimental heat distribution systems 'taking its pound of flesh' for the 'hell it unleashed'.<br>\
 		<br>\
 		News outlets and tabloids alike railed against the company for creating what was now being called the 'hellfire' laser gun. In response, most \
