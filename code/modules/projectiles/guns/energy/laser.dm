@@ -305,14 +305,16 @@
 	AddElement(/datum/element/examine_lore, \
 		lore_hint = span_notice("You can [EXAMINE_HINT("look closer")] to learn a little more about [src]."), \
 		lore = "For a brief period, Nanotrasen produced a series of custom-made Type 2 laser guns for a select group of \
-		clients. Largely, various wealthy generals, politicians and military leaders looking to demonstrate wealth and \
-		prestige amongst the common folk. <br>\
+		clients. Largely, various wealthy starship captains, politicians and military leaders looking to demonstrate prestige before \
+		the common folk. <br>\
 		<br>\
-		The Type 2 was a commercial failure, but the infamy of those weapons may have been most exemplified by how these \
-		particular versions of the weapon were wielded against political enemies and dissidents across occupied space.<br>\
+		The Type 2 was a commercial failure, but this particular variant earned its own infamy, linked to narratives of crazed \
+		despots using it to put down political rivals and dissidents. As well as tales of mad generals marching ahead of their \
+		forces, this weapon brandished, running hot, in an outstretched arm towards any moving target they could find on the \
+		battlefield. <br>\
 		<br>\
 		Examples of this firearm are now largely prohibited within TerraGov space, and any captured are quickly decommissioned.\
-		This is largely why Nanotrasen <i>inssists</i> that any examples held by ranking officers be kept under lock and key. \
+		This is largely why Nanotrasen <i>insists</i> that any examples held by ranking officers be kept under lock and key. \
 		All records of the schematics surrounding this variant of the Type 2 were seized and destroyed, and the creator behind \
 		it detained in a maximum security TerraGov sanitorium. When they found her, she appeared to have smeared the walls in her \
 		own blood, claiming that 'She' was coming, and that she had paid dearly for the knowledge of how to make the weapon. <br\
