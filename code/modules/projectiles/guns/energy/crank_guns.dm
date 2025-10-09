@@ -155,10 +155,11 @@
 /obj/item/gun/energy/laser/thermal/add_deep_lore()
 	AddElement(/datum/element/examine_lore, \
 		lore_hint = span_notice("You can [EXAMINE_HINT("look closer")] to learn a little more about [src]."), \
-		lore = "An example of a weapon with no true owner, the typical examples of thermal pistols vary heavily based on the \
-		manufacturer. However, the original inventor of the thermal pistol is largely clouded in mystery. Replica versions of \
-		the pistol were circulating long before weaponized nanites were banned by the TerraGov Subdermal Weapons Accord, \
-		and have continued to exist as a means of disposing of the self-replicating stocks of weaponized nanites.<br>\
+		lore = "A weapon with no name, more a pattern of design. Examples of thermal pistols vary heavily based on the \
+		manufacturer or craftsperson. However, the original inventor of the thermal pistol is largely clouded in mystery. \
+		Replica versions of the pistol were circulating long before weaponized nanites were banned by the \
+		TerraGov Subdermal Weapons Accord, and have continued to exist as a means of disposing of the self-replicating stocks \
+		of weaponized nanites.<br>\
 		<br>\
 		This is an example of Nanotrasen's Viper Classic model, based on earlier models of the weapon in appearance, but using \
 		up to date nanite breeding chambers that respond to user articulation. That is, the weapons can be charged with a vigorous \
