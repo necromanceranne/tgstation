@@ -332,16 +332,17 @@
 	AddElement(/datum/element/examine_lore, \
 		lore_hint = span_notice("You can [EXAMINE_HINT("look closer")] to learn a little more about [src]."), \
 		lore = "The NT Type 6 Heat Delivery System (sometimes referred to as the HDS6 in research notes) is a breakthrough in the \
-		develop of directed energy weaponry. <br>\
+		development of directed energy weaponry. <br>\
 		<br>\
-		Very little is known about the Type 6, as it is a relatively experimental weapon only accessible to Nanotrasen security forces.\
-		Somehow, Nanotrasen has found a means to 'slip' the energy beams produced by the Type 6 through unintended targets, only impacting\
+		Very little is known about the Type 6, as it is a relatively new experimental weapon only accessible to Nanotrasen security forces.\
+		Somehow, Nanotrasen has found a means to 'slip' the energy beams produced by the Type 6 through unintended targets, only impacting \
 		once it has made contact with a pre-designated target by the weapon's user. It appears to be unable to slip past organic matter reliably, \
-		which hampers its potential for eliminating friendly-fire entirely. But it is able to ignore non-target structures intact. This makes \
-		the weapon exceptional for asset recovery and defense fortification assaults.<br><br>\
-		Nanotrasen claims that this phenomenon is achieved 'through the power of X-rays'. Most critics have highlighted that this is total nonsense. some claim \
-		that Nanotrasen have discovered a yet uknown state of matter that the company is exploiting for weapons development and manufacturing. The most \
-		conspiratorially-minded of Nanotrasen's critics have even gone as far as to claim it is 'proof of ectoplasm as the sixth element'.\
+		which hampers its potential for eliminating friendly-fire. However, inorganic targets are left unscathed unless the weapon is directed towards \
+		firing upon the object. This makes the weapon exceptional for asset recovery and defense entrenchment and assaults on defensive structures. <br>\
+		<br>\
+		Nanotrasen claims that this phenomenon is achieved 'through the power of X-rays'. Most critics have highlighted that this is total nonsense. Some claim \
+		that Nanotrasen has discovered a yet uknown state of matter that the company is exploiting for weapons development and manufacturing. The most \
+		conspiratorially minded of Nanotrasen's critics have even gone as far as to claim it is 'proof of ectoplasm as the sixth element'.\
 		And that, perhaps, the weapon may be operating through supernatural means. Maybe even powered by the 'spirits of the damned'.<br>\
 		<br>\
 		Whatever the truth may be, the weapon seems to function as advertized, and is even more energy efficient than the Type 5. Nanotrasen \
