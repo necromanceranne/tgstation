@@ -41,7 +41,7 @@
 	desc = "A hand-crafted disabler, using a hard knock on an energy cell to fire the stunner laser. A lack of proper focusing means it has no accuracy whatsoever."
 	icon_state = "smoothbore"
 	ammo_type = list(/obj/item/ammo_casing/energy/disabler/smoothbore)
-	shaded_charge = 1
+	shaded_charge = TRUE
 	charge_sections = 1
 	spread = 22.5
 	obj_flags = UNIQUE_RENAME
@@ -83,7 +83,6 @@
 	icon_state = "infernopistol"
 	inhand_icon_state = null
 	ammo_type = list(/obj/item/ammo_casing/energy/nanite)
-	shaded_charge = TRUE
 	ammo_x_offset = 1
 	obj_flags = UNIQUE_RENAME
 	w_class = WEIGHT_CLASS_NORMAL
@@ -127,3 +126,51 @@
 		ammunition by manually spinning the weapon's nanite canister."
 	icon_state = "cryopistol"
 	ammo_type = list(/obj/item/ammo_casing/energy/nanite/cryo)
+
+
+// The Deep Lore //
+
+// Laser Musket
+
+/obj/item/gun/energy/laser/musket/add_deep_lore()
+	AddElement(/datum/element/examine_lore, \
+		lore_hint = span_notice("You can [EXAMINE_HINT("look closer")] to learn a little more about [src]."), \
+		lore = "The first examples of laser muskets emerged somewhat recently, even though improvised firearms have had \
+		a rich history throughout human, Mothic and Tiziran history.<br>\
+		<br>\
+		Some of the earliest conflicts in which laser muskets emerged include the Battle of Gulpha 5, the Siege of Redscale's \
+		Orbital Keep, and the Diaspora Wars of 2437. In many of these examples, laser muskets started to emerge when conventional \
+		weaponry or ammunition started to grow scarcer, and the amount of scrap electronics and materials outpaced the speed at \
+		which engineering crews could repair structural defenses and infrastructure. They're regarded as weapons of extreme \
+		desperation, but also of unmatched grit in the face of a hopeless situation. <br>\
+		<br>\
+		Some engineering crews, hunched beneath the orange glow of fluorescent bulbs in quiet corners of maintenance, still tell the tale \
+		of the SS Brunswick, who, at the cost of their own lives, managed to turn their flux capacitors into an oversized laser cannon and \
+		repel Baron Redscale's interceptor fleets long enough for the rest of the rebel forces to make a decisive assault on the keep. <br>\
+		<br>\
+		Constructing one of these is sometimes seen as a rite of passage amongst militia groups. Each one as unique as the next. <br>\
+		<br>\
+		What will this one's name be? What history will it write? Who can say." \
+	)
+
+// Thermal Pistols
+
+/obj/item/gun/energy/laser/thermal/add_deep_lore()
+	AddElement(/datum/element/examine_lore, \
+		lore_hint = span_notice("You can [EXAMINE_HINT("look closer")] to learn a little more about [src]."), \
+		lore = "Very few people truly know the exact origins of the thermal pistol. While it is an offering within Nanotrasen's \
+		arsenal as a personal defense weapon, they never truly patented the weapon as their own. Presumably, the weapon exists \
+		in a kind of copyright limbo, with no one company able to confidently claim ownship, as there exists numerous legal \
+		documentation to contradict Nanotrasen's ownership within a TerraGov court of law.<br>\
+		<br>\
+		Due to various movies and television programs, or perhaps spacer legends of fancy, the weapons are often associated with the \
+		'Space Rangers' that roam the periphery and Australicus regions of space. Polarizing tales of rugged gun fighters roaming \
+		from outpost to outpost, leaving justice, death or merely a large quantity of buzzing nanite clouds in their wake. \
+		Robber barons, frontier lawbringers. Even the occasional hard-boiled detective. These weapons are sometimes associated \
+		with cultural imagery around rugged individualism, tenacity and nonconformity, as well as a bygone age of noble warriors and \
+		ruthless villainry. Using these weapons today is largely seen as a way to evoke this imagery, even if it comes across \
+		as mildly tacky. <br>\
+		<br>\
+		It isn't fully understood who started the practice of 'pairing' the pistols. Perhaps some things are better left a mystery. As \
+		much of a mystery as to how all these weaponized nanites ended up in the hands of frontier space rangers." \
+	)
