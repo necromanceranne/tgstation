@@ -358,15 +358,16 @@
 		TGMC troopers) was a shaky first step into fully automatic directed energy weaponry. <br>\
 		<br>\
 		Intended for use in special operations, particularly in the hands of orbital drop shock troopers, the Type C1 was foreseen to be an excellent \
-		addition to Nanotrasen's arsenal of offerings to military forces across occupied space. However, there quickly proved various problems faced \
-		by the intended users of the weapon. The advantages of directed energy weapons is the lightweight impacts felt on the supply chain for logistical \
-		officers and quartermasters due to the only upkeep need for the weapon is a consistent power supply, either established or brought to the front.<br>\
+		addition to Nanotrasen's arsenal of offerings to military forces across occupied space. However, field performance proved grim.<br>\
+		<br>\
+		The advantages of directed energy weapons is the lightweight impacts felt on the supply chain for logistical officers and quartermasters due to the \
+		only necessary upkeep for the weapons being a consistent power supply, either established or brought to the front, and the occassional cleaning.<br>\
 		<br>\
 		This, however, is not a benefit that soldiers operating behind enemy lines or during tactical deployments are capable of exploiting. As a result, \
-		soldiers often found themselves having discharged their weapons without a reliable way to sustain their fire past the first several volleys. <br>\
+		operators often chaffed against the limited ammunition supply compared to conventional ballistic firearms, and the weapon quickly was abandoned by \
+		most special forces units.<br>\
 		<br>\
-		Instead, the weapon found more functional use in the hands of private security teams, who enjoyed the volume of fire it provided, while maintaining \
-		exceptional accuracy even at long ranges, as well as being compact enough to allow a high degree of mobility. The weapon is also often utilized by \
-		rim pirates and marauders, giving the weapon something of an ill reputation. Nanotrasen is currently working on a Type C2 prototype that will hit \
-		markets in the near future, hoping to address these potential problems." \
+		Instead, the weapon found favour in the hands of private security teams, who enjoyed the volume of fire it provided, while maintaining \
+		exceptional accuracy even at long ranges, as well as being compact enough to allow a high of discretion compared to a full sized rifle. \
+		The weapon is also often utilized by rim pirates and marauders, giving the weapon something of an ill reputation." \
 	)
