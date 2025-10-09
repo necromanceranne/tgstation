@@ -138,7 +138,7 @@
 		lore = "The first examples of laser muskets emerged somewhat recently, even though improvised firearms have had \
 		a rich history throughout human, Mothic and Tiziran history.<br>\
 		<br>\
-		Some of the earliest conflicts in which laser muskets emerged include the Battle of Gulpha 5, the Siege of Redscale's \
+		Some of the earliest conflicts in which laser muskets emerged include the Battle of Bey-Lorn 7, the Siege of Redscale's \
 		Orbital Keep, and the Diaspora Wars of 2437. In many of these examples, laser muskets started to emerge when conventional \
 		weaponry or ammunition started to grow scarcer, and the amount of scrap electronics and materials outpaced the speed at \
 		which engineering crews could repair structural defenses and infrastructure. They're regarded as weapons of extreme \
