@@ -313,7 +313,7 @@
 		forces, this weapon brandished, running hot, in an outstretched arm towards any moving target they could find on the \
 		battlefield. <br>\
 		<br>\
-		Examples of this firearm are now largely prohibited within TerraGov space, and any captured are quickly decommissioned.\
+		Copies of this firearm are now prohibited within TerraGov space, and any captured are quickly decommissioned.\
 		This is largely why Nanotrasen <i>insists</i> that any examples held by ranking officers be kept under lock and key. \
 		All records of the schematics surrounding this variant of the Type 2 were seized and destroyed, and the creator behind \
 		it detained in a maximum security TerraGov sanitorium. When they found her, she appeared to have smeared the walls in her \
@@ -322,7 +322,7 @@
 		Even the microfusion breeder cell housed inside the weapon is practically a lost technology, and Nanotrasen have been unable \
 		to reverse engineer the devices exact means of functionality.<br>\
 		<br>\
-		The Syndicate are obviously just as interested in exactly how this weapon is capable of self-perpetuation. Hence why the collection \
+		The Syndicate are obviously just as interested in exactly how this weapon is capable of self-perpetuation. Hence why the collective \
 		seem hell-bent on capturing them whenever possible. Maybe keep this somewhere safe. Or don't." \
 	)
 
