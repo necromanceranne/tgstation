@@ -170,8 +170,9 @@
 		from outpost to outpost, leaving justice, death or merely a large quantity of buzzing nanite clouds in their wake. \
 		Robber barons, frontier lawbringers. Even the occasional hard-boiled detective. These weapons are sometimes associated \
 		with cultural imagery around rugged individualism, tenacity and nonconformity, as well as a bygone age of noble warriors and \
-		ruthless villainry. Using these weapons today is largely seen as a way to evoke this imagery, even if it comes across \
+		ruthless villains. Using these weapons today is largely seen as a way to evoke this imagery, even if it comes across \
 		as mildly tacky. <br>\
 		<br>\
-		It isn't fully understood who started the practice of 'pairing' the pistols." \
+		It isn't fully understood who started the practice of 'pairing' the pistols, though the custom has remained as long as \
+		living memory. Every thermal pistol has a mate, and it is considered ill fortune to separate them purposefully." \
 	)
