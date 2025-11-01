@@ -134,12 +134,26 @@
 	category = CAT_WEAPON_MELEE
 
 /datum/crafting_recipe/spear
-	name = "Spear"
+	name = "Knife Spear"
 	result = /obj/item/spear
 	reqs = list(
 		/obj/item/restraints/handcuffs/cable = 1,
-		/obj/item/shard = 1,
+		/obj/item/knife = 1,
 		/obj/item/stack/rods = 1,
+	)
+	time = 4 SECONDS
+	category = CAT_WEAPON_MELEE
+
+/datum/crafting_recipe/spear_kitchen
+	name = "Kitchen Spear"
+	result = /obj/item/spear/kitchen
+	reqs = list(
+		/obj/item/restraints/handcuffs/cable = 1,
+		/obj/item/kitchen = 1,
+		/obj/item/stack/rods = 1,
+	)
+	blacklist = list(
+		/obj/item/kitchen/spoon/soup_ladle
 	)
 	time = 4 SECONDS
 	category = CAT_WEAPON_MELEE

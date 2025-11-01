@@ -4,6 +4,7 @@
 	desc = "A haphazardly-constructed yet still deadly weapon of ancient design."
 	icon = 'icons/obj/weapons/spear.dmi'
 	icon_state = "spearglass0"
+	base_icon_state = "spear_rod"
 	lefthand_file = 'icons/mob/inhands/weapons/polearms_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/polearms_righthand.dmi'
 	icon_angle = -45
@@ -27,8 +28,8 @@
 	exposed_wound_bonus = 15
 	/// For explosive spears, what we cry out when we use this to bap someone
 	var/war_cry = "AAAAARGH!!!"
-	/// The icon prefix for this flavor of spear
-	var/icon_prefix = "spearglass"
+	/// Overlay for our spear head.
+	var/spear_head_overlay_icon
 	/// How much damage to do unwielded
 	var/force_unwielded = 10
 	/// How much damage to do wielded
@@ -36,7 +37,9 @@
 	/// Whether or not hitting with this spear causes damage to the spear itself
 	var/improvised_construction = TRUE
 	/// What is left over when a spear breaks
-	var/spear_leftovers = /obj/item/stack/rods
+	var/obj/item/spear_leftovers
+	/// The type of spearhead we will spawn if one isn't set by some other method.
+	var/spear_head_type = /obj/item/knife/shiv
 
 /datum/embedding/spear
 	impact_pain_mult = 2
@@ -63,11 +66,117 @@
 	AddComponent(/datum/component/two_handed, \
 		force_unwielded = force_unwielded, \
 		force_wielded = force_wielded, \
-		icon_wielded = "[icon_prefix]1", \
 		wield_callback = CALLBACK(src, PROC_REF(on_wield)), \
 		unwield_callback = CALLBACK(src, PROC_REF(on_unwield)), \
 	)
 	add_headpike_component()
+	update_appearance()
+	set_spear_head(new spear_head_type)
+
+/obj/item/spear/update_icon_state()
+	. = ..()
+	var/possible_spear_head = spear_head_overlay_icon ? spear_head_overlay_icon : ""
+	var/are_we_wielding = HAS_TRAIT(src, TRAIT_WIELDED) ? "1" : "0"
+	icon_state = "[base_icon_state][are_we_wielding]"
+	inhand_icon_state = "[base_icon_state][possible_spear_head][are_we_wielding]"
+
+/obj/item/spear/update_overlays()
+	. = ..()
+	if(spear_head_overlay_icon)
+		. += "spearhead_[spear_head_overlay_icon]"
+
+/obj/item/spear/on_craft_completion(list/components, datum/crafting_recipe/current_recipe, atom/crafter)
+	var/obj/item/knife/tip = locate() in components
+	var/obj/item/stack/proper_staff = locate() in components
+
+	var/list/finalized_custom_materials = list()
+
+	if(tip)
+		force = tip.force
+		throwforce = tip.throwforce = 10
+		armour_penetration = tip.armour_penetration + 5
+		throw_speed = tip.throw_speed + 1
+		throw_range = tip.throw_range
+		sharpness = tip.sharpness
+		finalized_custom_materials += tip.custom_materials
+		wound_bonus = tip.wound_bonus
+		exposed_wound_bonus = tip.exposed_wound_bonus
+		force_unwielded = tip.force
+		force_wielded = tip.force + 8
+		AddComponent(/datum/component/two_handed, \
+			force_unwielded = force_unwielded, \
+			force_wielded = force_wielded, \
+			wield_callback = CALLBACK(src, PROC_REF(on_wield)), \
+			unwield_callback = CALLBACK(src, PROC_REF(on_unwield)), \
+		)
+		name = "[tip.name] [tip.polearm_type]"
+		desc = "[tip.desc] This one has been put on the end of a pole, forming a [tip.polearm_type]."
+
+		if(istype(tip, /obj/item/knife/bloodletter))
+			var/obj/item/knife/bloodletter/bleed_sticker = tip
+			AddElement(/datum/element/bleed, bleed_stacks = bleed_sticker.bleed_stacks_per_hit)
+
+	if(proper_staff)
+		var/haft_name = "iron rod"
+		switch(proper_staff)
+			if(/obj/item/stack/rods)
+				base_icon_state = "spear_rod"
+				finalized_custom_materials  += list(/datum/material/iron = HALF_SHEET_MATERIAL_AMOUNT)
+			if(/obj/item/stack/sheet/mineral/bamboo)
+				improvised_construction = FALSE
+				base_icon_state = "spear_bamboo"
+				haft_name = "bamboo"
+				finalized_custom_materials += list(/datum/material/bamboo = HALF_SHEET_MATERIAL_AMOUNT)
+			if(/obj/item/stack/sheet/mineral/wood)
+				improvised_construction = FALSE
+				base_icon_state = "spear_wood"
+				haft_name = "wooden"
+				finalized_custom_materials += list(/datum/material/wood = HALF_SHEET_MATERIAL_AMOUNT)
+		desc = "[desc] It appears to have a [haft_name] haft."
+
+	custom_materials = finalized_custom_materials
+	update_appearance()
+	return ..()
+
+/obj/item/spear/on_craft_completion(list/components, datum/crafting_recipe/current_recipe, atom/crafter)
+	var/obj/item/knife/tip = locate() in components
+	if(tip)
+		set_spear_head(tip)
+	return ..()
+
+/obj/item/spear/afterattack(atom/target, mob/user, list/modifiers, list/attack_modifiers)
+	if(improvised_construction)
+		return
+	take_damage(force/2, sound_effect = FALSE)
+
+/obj/item/spear/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	. = ..()
+	if (.) //spear was caught
+		return
+	if(!improvised_construction)
+		return
+	take_damage(throwforce/2, sound_effect = FALSE)
+
+/obj/item/spear/atom_destruction(damage_flag)
+	playsound(src, 'sound/effects/grillehit.ogg', 50)
+	if(spear_leftovers)
+		var/obj/item/knife/tip = spear_leftovers
+		spear_leftovers = null
+		tip.forceMove(drop_location())
+	if(isliving(loc))
+		loc.balloon_alert(loc, "spear broken!")
+	return ..()
+
+/obj/item/spear/suicide_act(mob/living/carbon/user)
+	user.visible_message(span_suicide("[user] begins to sword-swallow \the [src]! It looks like [user.p_theyre()] trying to commit suicide!"))
+	return BRUTELOSS
+
+/obj/item/spear/proc/set_spear_head(obj/item/tip)
+	if(spear_leftovers)
+		QDEL_NULL(spear_leftovers)
+	tip.forceMove(src)
+	spear_leftovers = tip
+	spear_head_overlay_icon = tip.icon_state
 	update_appearance()
 
 // I dunno man
@@ -79,101 +188,6 @@
 		slapcraft_recipes = slapcraft_recipe_list,\
 	)
 
-/obj/item/spear/update_icon_state()
-	icon_state = "[icon_prefix]0"
-	return ..()
-
-/obj/item/spear/suicide_act(mob/living/carbon/user)
-	user.visible_message(span_suicide("[user] begins to sword-swallow \the [src]! It looks like [user.p_theyre()] trying to commit suicide!"))
-	return BRUTELOSS
-
-/obj/item/spear/on_craft_completion(list/components, datum/crafting_recipe/current_recipe, atom/crafter)
-	var/obj/item/shard/tip = locate() in components
-	if(!tip)
-		return ..()
-
-	switch(tip.type)
-		if(/obj/item/shard/plasma)
-			force = 11
-			throwforce = 21
-			custom_materials = list(/datum/material/iron= HALF_SHEET_MATERIAL_AMOUNT, /datum/material/alloy/plasmaglass= HALF_SHEET_MATERIAL_AMOUNT * 2)
-			icon_prefix = "spearplasma"
-			max_integrity = 220
-			wound_bonus = -10
-			force_unwielded = 11
-			force_wielded = 19
-			AddComponent(/datum/component/two_handed, \
-				force_unwielded = force_unwielded, \
-				force_wielded = force_wielded, \
-				icon_wielded = "[icon_prefix]1", \
-				wield_callback = CALLBACK(src, PROC_REF(on_wield)), \
-				unwield_callback = CALLBACK(src, PROC_REF(on_unwield)), \
-			)
-
-		if(/obj/item/shard/titanium)
-			force = 12
-			throwforce = 22
-			throw_range = 8
-			throw_speed = 5
-			custom_materials = list(/datum/material/iron= HALF_SHEET_MATERIAL_AMOUNT, /datum/material/alloy/titaniumglass= HALF_SHEET_MATERIAL_AMOUNT * 2)
-			max_integrity = 230
-			wound_bonus = -5
-			force_unwielded = 12
-			force_wielded = 20
-			armour_penetration = 10
-			icon_prefix = "speartitanium"
-			AddComponent(/datum/component/two_handed, \
-				force_unwielded = force_unwielded, \
-				force_wielded = force_wielded, \
-				icon_wielded = "[icon_prefix]1", \
-				wield_callback = CALLBACK(src, PROC_REF(on_wield)), \
-				unwield_callback = CALLBACK(src, PROC_REF(on_unwield)), \
-			)
-
-		if(/obj/item/shard/plastitanium)
-			force = 13
-			throwforce = 23
-			throw_range = 9
-			throw_speed = 5
-			custom_materials = list(/datum/material/iron= HALF_SHEET_MATERIAL_AMOUNT, /datum/material/alloy/plastitaniumglass= HALF_SHEET_MATERIAL_AMOUNT * 2)
-			max_integrity = 240
-			wound_bonus = 0
-			exposed_wound_bonus = 20
-			force_unwielded = 13
-			force_wielded = 21
-			armour_penetration = 15
-			icon_prefix = "spearplastitanium"
-			AddComponent(/datum/component/two_handed, \
-				force_unwielded = force_unwielded, \
-				force_wielded = force_wielded, \
-				icon_wielded = "[icon_prefix]1", \
-				wield_callback = CALLBACK(src, PROC_REF(on_wield)), \
-				unwield_callback = CALLBACK(src, PROC_REF(on_unwield)), \
-			)
-
-	update_appearance()
-	return ..()
-
-/obj/item/spear/afterattack(atom/target, mob/user, list/modifiers, list/attack_modifiers)
-	if(improvised_construction)
-		return
-	take_damage(force, sound_effect = FALSE)
-
-/obj/item/spear/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
-	. = ..()
-	if (.) //spear was caught
-		return
-	if(!improvised_construction)
-		return
-	take_damage(throwforce, sound_effect = FALSE)
-
-/obj/item/spear/atom_destruction(damage_flag)
-	playsound(src, 'sound/effects/grillehit.ogg', 50)
-	new spear_leftovers(get_turf(src))
-	if(isliving(loc))
-		loc.balloon_alert(loc, "spear broken!")
-	return ..()
-
 /obj/item/spear/proc/on_wield(obj/item/source, mob/living/carbon/user)
 	reach = 1
 	armour_penetration *= 2
@@ -182,11 +196,14 @@
 	reach = 2
 	armour_penetration /= 2
 
+/obj/item/spear/kitchen
+	desc = "A haphazardly-constructed yet still deadly weapon of ancient design. This one seems to have been constructed from someones kitchen utsenil drawer."
+
+
 /obj/item/spear/explosive
 	name = "explosive lance"
 	icon_state = "spearbomb0"
 	base_icon_state = "spearbomb"
-	icon_prefix = "spearbomb"
 	var/obj/item/grenade/explosive = null
 
 /obj/item/spear/explosive/Initialize(mapload)
@@ -205,7 +222,6 @@
 	if(nade)
 		var/obj/item/spear/lancePart = locate() in components
 		throwforce = lancePart.throwforce
-		icon_prefix = lancePart.icon_prefix
 		set_explosive(nade)
 	return ..()
 
@@ -274,11 +290,10 @@
 
 //MILITARY
 /obj/item/spear/military
-	icon_state = "military_spear0"
-	base_icon_state = "military_spear0"
-	icon_prefix = "military_spear"
 	name = "military javelin"
 	desc = "A stick with a seemingly blunt spearhead on its end. Looks like it might break bones easily."
+	icon_state = "military_spear0"
+	base_icon_state = "military_spear"
 	attack_verb_continuous = list("attacks", "pokes", "jabs")
 	attack_verb_simple = list("attack", "poke", "jab")
 	throwforce = 30
@@ -289,6 +304,7 @@
 	throw_speed = 5
 	sharpness = NONE // we break bones instead of cutting flesh
 	improvised_construction = FALSE
+	spear_head_type = null
 
 /obj/item/spear/military/add_headpike_component()
 	var/static/list/slapcraft_recipe_list = list(/datum/crafting_recipe/headpikemilitary)
@@ -305,14 +321,14 @@
 	name = "bone spear"
 	desc = "A haphazardly-constructed yet still deadly weapon. The pinnacle of modern technology."
 	icon_state = "bone_spear0"
-	base_icon_state = "bone_spear0"
-	icon_prefix = "bone_spear"
+	base_icon_state = "bone_spear"
 	throwforce = 22
 	armour_penetration = 20 //Enhanced armor piercing
 	custom_materials = list(/datum/material/bone = HALF_SHEET_MATERIAL_AMOUNT * 7)
 	force_unwielded = 12
 	force_wielded = 20
-	spear_leftovers = /obj/item/stack/sheet/bone
+	spear_leftovers = /obj/item/knife/combat/bone
+	spear_head_type = null
 
 /obj/item/spear/bonespear/add_headpike_component()
 	var/static/list/slapcraft_recipe_list = list(/datum/crafting_recipe/headpikebone)
@@ -326,15 +342,14 @@
  * Bamboo Spear
  */
 /obj/item/spear/bamboospear //Blatant imitation of spear, but all natural. Also not valid for explosive modification.
-	icon_state = "bamboo_spear0"
-	base_icon_state = "bamboo_spear0"
-	icon_prefix = "bamboo_spear"
 	name = "bamboo spear"
 	desc = "A haphazardly-constructed bamboo stick with a sharpened tip, ready to poke holes into unsuspecting people."
-
+	icon_state = "bamboo_spear0"
+	base_icon_state = "bamboo_spear"
 	throwforce = 23	//Better to throw
 	custom_materials = list(/datum/material/bamboo = SHEET_MATERIAL_AMOUNT * 20)
-	spear_leftovers = /obj/item/stack/sheet/mineral/bamboo
+	improvised_construction = FALSE
+	spear_head_type = null
 
 /obj/item/spear/bamboospear/add_headpike_component()
 	var/static/list/slapcraft_recipe_list = list(/datum/crafting_recipe/headpikebamboo)
@@ -354,7 +369,7 @@
 	name = "\improper Sky Bulge"
 	desc = "A legendary stick with a very pointy tip. Takes you to the skies!"
 	icon_state = "dragoonpole0"
-	icon_prefix = "dragoonpole"
+	base_icon_state = "dragoonpole"
 	attack_verb_continuous = list("attacks", "pokes", "jabs", "tears", "gores", "lances")
 	attack_verb_simple = list("attack", "poke", "jab", "tear", "gore", "lance")
 	throwforce = 24
@@ -367,6 +382,7 @@
 	action_slots = ITEM_SLOT_HANDS
 	actions_types = list(/datum/action/item_action/skybulge)
 	improvised_construction = FALSE
+	spear_head_type = null
 
 ///The action button the spear gives, usable once a minute.
 /datum/action/item_action/skybulge

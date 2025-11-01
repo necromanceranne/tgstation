@@ -31,6 +31,7 @@
 	operating_sound = SFX_KNIFE_SLICE
 	pickup_sound = SFX_KNIFE_PICKUP
 	drop_sound = SFX_KNIFE_DROP
+	var/polearm_type = "glaive"
 
 /datum/armor/item_knife
 	fire = 50
@@ -92,17 +93,9 @@
 	/// Bleed stacks applied when an organic mob target is hit
 	var/bleed_stacks_per_hit = 3
 
-/obj/item/knife/bloodletter/afterattack(atom/target, mob/user, list/modifiers, list/attack_modifiers)
-	if(!isliving(target))
-		return
-	var/mob/living/M = target
-	if(!(M.mob_biotypes & MOB_ORGANIC))
-		return
-	var/datum/status_effect/stacking/saw_bleed/bloodletting/B = M.has_status_effect(/datum/status_effect/stacking/saw_bleed/bloodletting)
-	if(!B)
-		M.apply_status_effect(/datum/status_effect/stacking/saw_bleed/bloodletting, bleed_stacks_per_hit)
-	else
-		B.add_stacks(bleed_stacks_per_hit)
+/obj/item/knife/bloodletter/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/bleed, bleed_stacks = bleed_stacks_per_hit)
 
 /obj/item/knife/butcher
 	name = "butcher's cleaver"
@@ -217,7 +210,9 @@
 	obj_flags = parent_type::obj_flags & ~CONDUCTS_ELECTRICITY
 	force = 15
 	throwforce = 15
-	custom_materials = null
+	sharpness = SHARP_POINTY
+	custom_materials = list(/datum/material/bone = HALF_SHEET_MATERIAL_AMOUNT * 4)
+	polearm_type = "spear"
 
 /datum/embedding/combat_knife/weak
 	embed_chance = 35
@@ -240,23 +235,23 @@
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	obj_flags = parent_type::obj_flags & ~CONDUCTS_ELECTRICITY
-	force = 8
-	throwforce = 12
+	sharpness = SHARP_POINTY
 	attack_verb_continuous = list("shanks", "shivs")
 	attack_verb_simple = list("shank", "shiv")
 	armor_type = /datum/armor/none
 	custom_materials = list(/datum/material/glass = SMALL_MATERIAL_AMOUNT * 4)
+	polearm_type = "spear"
 
 /obj/item/knife/shiv/make_stabby()
-	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple, -3)
+	AddComponent(/datum/component/alternative_sharpness, SHARP_EDGED, alt_continuous, alt_simple, -3)
 
 /obj/item/knife/shiv/plasma
 	name = "plasma shiv"
 	desc = "A makeshift plasma glass shiv."
 	icon_state = "plasmashiv"
 	inhand_icon_state = "plasmashiv"
-	force = 9
-	throwforce = 13
+	force = 11
+	throwforce = 11
 	armor_type = /datum/armor/shiv_plasma
 	custom_materials = list(/datum/material/glass=SMALL_MATERIAL_AMOUNT *4, /datum/material/plasma=SMALL_MATERIAL_AMOUNT * 2)
 
@@ -274,7 +269,9 @@
 	desc = "A makeshift titanium-infused glass shiv."
 	icon_state = "titaniumshiv"
 	inhand_icon_state = "titaniumshiv"
-	throwforce = 14
+	force = 12
+	throwforce = 12
+	armour_penetration = 10
 	throw_range = 7
 	wound_bonus = 10
 	armor_type = /datum/armor/shiv_titanium
@@ -294,11 +291,12 @@
 	desc = "A makeshift titanium-infused plasma glass shiv."
 	icon_state = "plastitaniumshiv"
 	inhand_icon_state = "plastitaniumshiv"
-	force = 10
-	throwforce = 15
+	force = 13
+	throwforce = 13
+	armour_penetration = 20
 	throw_speed = 4
 	throw_range = 8
-	wound_bonus = 10
+	wound_bonus = 15
 	exposed_wound_bonus = 20
 	armor_type = /datum/armor/shiv_plastitanium
 	custom_materials = list(/datum/material/glass= SMALL_MATERIAL_AMOUNT * 4, /datum/material/alloy/plastitanium= SMALL_MATERIAL_AMOUNT * 2)
@@ -339,3 +337,9 @@
 	inhand_icon_state = "rootshiv"
 	icon_angle = -45
 	custom_materials = null
+
+/obj/item/knife/carp
+	name = "carp tooth"
+	desc = "Looks sharp. Sharp enough to poke someone's eye out. Holy fuck it's big."
+	icon_state = "carptooth"
+	icon_angle = -45
