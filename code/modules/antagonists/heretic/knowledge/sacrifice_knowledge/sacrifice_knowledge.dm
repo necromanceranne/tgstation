@@ -39,6 +39,7 @@
 		/obj/item/organ/stomach/corrupt,
 		/obj/item/organ/tongue/corrupt,
 	)
+	allow_spintria = FALSE
 
 /datum/heretic_knowledge/hunt_and_sacrifice/Destroy(force)
 	heretic_mind = null

@@ -1,3 +1,5 @@
+#define SPINTRIA_VALUE_FOR_INVOCATION 10
+
 /// The heretic's rune, which they use to complete transmutation rituals.
 /obj/effect/heretic_rune
 	name = "transmutation rune"
@@ -98,20 +100,47 @@
 	// We decrement the values of to determine if enough of each key is present.
 	var/list/requirements_list = ritual.required_atoms.Copy()
 	var/list/banned_atom_types = ritual.banned_atom_types.Copy()
+	// We determine if we can utilize spintria in the ritual.
+	var/allow_spintria = ritual.allow_spintria
+	// If there are spintria, count their value and complete the ritual.
+	var/list/spintria_in_ritual = list()
+	// Add any spintria to this value.
+	var/spintria_value = 0
+	// If TRUE, we paid for the ritual instead.
+	var/capitalism_wins_again = FALSE
 	// A list of all atoms we've selected to use in this recipe.
 	var/list/selected_atoms = list()
 
 	// Do the snowflake check to see if we can continue or not.
 	// selected_atoms is passed and can be modified by this proc.
 	if(!ritual.recipe_snowflake_check(user, atoms_in_range, selected_atoms, loc))
+		loc.balloon_alert(user, "ritual failed, missing special components!")
 		return FALSE
 
 	var/list/stack_reqs = list()
+
+	// First, see if we can start by checking for nearby spintria
+	if(allow_spintria)
+		for(var/atom/possible_coin as anything in atoms_in_range)
+			// Start collecting our spintria value, since that may
+			if(istype(possible_coin, /obj/item/coin/spintria) && spintria_value < SPINTRIA_VALUE_FOR_INVOCATION)
+				var/obj/item/coin/spintria/usable_coin = possible_coin
+				spintria_in_ritual |= usable_coin
+				spintria_value += usable_coin.sacrifice_value
+
+				if(spintria_value >= SPINTRIA_VALUE_FOR_INVOCATION && !capitalism_wins_again)
+					capitalism_wins_again = TRUE
+					selected_atoms += spintria_in_ritual
+			else
+				continue
 
 	// Now go through all our nearby atoms and see which are good for our ritual.
 	for(var/atom/nearby_atom as anything in atoms_in_range)
 		// Go through all of our required atoms
 		for(var/req_type in requirements_list)
+			// We already paid in spintria? Don't worry about it.
+			if(capitalism_wins_again)
+				continue
 			// We already have enough of this type, skip
 			if(requirements_list[req_type] <= 0)
 				continue
@@ -164,7 +193,7 @@
 
 		what_are_we_missing += formatted_thing
 
-	if(length(what_are_we_missing))
+	if(length(what_are_we_missing) && !capitalism_wins_again)
 		// Let them know it screwed up
 		loc.balloon_alert(user, "ritual failed, missing components!")
 		// Then let them know what they're missing
@@ -269,3 +298,5 @@
 /obj/effect/temp_visual/drawing_heretic_rune/fail
 	duration = 0.25 SECONDS
 	animation_state = "transmutation_rune_fail"
+
+#undef SPINTRIA_VALUE_FOR_INVOCATION

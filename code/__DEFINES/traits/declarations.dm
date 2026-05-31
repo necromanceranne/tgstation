@@ -1002,6 +1002,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_HERETIC_SUMMON "heretic_summon"
 /// Lock heretic grasp no longer goes on cooldown when opening things
 #define TRAIT_LOCK_GRASP_UPGRADED "lock_grasp_upgraded"
+/// A lock heretic has stolen a spintria from this mob.
+#define TRAIT_LOCK_HAS_ROBBED "lock_has_robbed"
 
 //quirk traits
 #define TRAIT_ALCOHOL_TOLERANCE "alcohol_tolerance"

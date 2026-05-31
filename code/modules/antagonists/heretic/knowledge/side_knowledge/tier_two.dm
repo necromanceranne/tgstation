@@ -119,6 +119,7 @@
 	research_tree_icon_path = 'icons/obj/signs.dmi'
 	research_tree_icon_state = "eldritch_painting_weeping"
 	drafting_tier = 2
+	allow_spintria = FALSE
 
 /datum/heretic_knowledge/painting/recipe_snowflake_check(mob/living/user, list/atoms, list/selected_atoms, turf/loc)
 	if(locate(/obj/item/organ/eyes) in atoms)

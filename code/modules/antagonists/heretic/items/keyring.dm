@@ -1,16 +1,11 @@
 /obj/effect/lock_portal
-	name = "crack in reality"
-	desc = "A crack in space, impossibly deep and painful to the eyes. Definitely not safe."
+	name = "transposition veil"
+	desc = "A strange wall of energy, with a sheen like spilt oil. It is difficult perceive past the barrier, as the senses meld sensations from this world and the next."
 	icon = 'icons/effects/eldritch.dmi'
-	icon_state = "realitycrack"
-	light_system = COMPLEX_LIGHT
-	light_power = 1
-	light_on = TRUE
-	light_color = COLOR_GREEN
-	light_range = 3
-	opacity = TRUE
+	icon_state = "transposition_veil"
 	density = FALSE //so we dont block doors closing
 	layer = OBJ_LAYER //under doors
+	alpha = 40
 	///The knock portal we teleport to
 	var/obj/effect/lock_portal/destination
 	///The airlock we are linked to, we delete if it is destroyed

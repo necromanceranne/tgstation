@@ -132,6 +132,7 @@
 		/obj/item/stack/sheet/animalhide,
 		/obj/item/food/deadmouse,
 	))
+	allow_spintria = FALSE
 
 /datum/heretic_knowledge/codex_cicatrix/recipe_snowflake_check(mob/living/user, list/atoms, list/selected_atoms, turf/loc)
 	. = ..()

@@ -384,3 +384,14 @@
 		playsound(src, SFX_SCREECH, 75, TRUE)
 		return FALSE
 	return TRUE
+
+/obj/item/firing_pin/lock
+	name = "pas un percuteur"
+	desc = "You have no idea what this strange, deceptive thing in the shape of a firing pin might be, but you are \
+		fairly confident this is completely useless as a firing pin."
+	fail_message = "trigger locked, firing pin needed!"
+
+/obj/item/firing_pin/lock/pin_auth(mob/living/user)
+	if(IS_HERETIC_OR_MONSTER(user))
+		return TRUE
+	return FALSE

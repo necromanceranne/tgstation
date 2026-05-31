@@ -36,8 +36,6 @@
 	if(SEND_SIGNAL(caster, COMSIG_HERETIC_MANSUS_GRASP_ATTACK, victim) & COMPONENT_BLOCK_HAND_USE)
 		return FALSE
 
-	var/mob/living/living_hit = victim
-	living_hit.apply_damage(10, BRUTE, wound_bonus = CANT_WOUND)
 	if(!iscarbon(victim))
 		return TRUE
 
@@ -70,11 +68,11 @@
 	return TRUE
 
 /datum/action/cooldown/spell/touch/mansus_grasp/cast_on_secondary_hand_hit(obj/item/melee/touch_attack/hand, atom/victim, mob/living/carbon/caster)
-	if(isliving(victim)) // if it's a living mob, go with our normal afterattack
-		return SECONDARY_ATTACK_CALL_NORMAL
-
 	if(SEND_SIGNAL(caster, COMSIG_HERETIC_MANSUS_GRASP_ATTACK_SECONDARY, victim) & COMPONENT_USE_HAND)
 		return SECONDARY_ATTACK_CONTINUE_CHAIN
+
+	else if(isliving(victim)) // else, if it's a living mob, go with our normal afterattack
+		return SECONDARY_ATTACK_CALL_NORMAL
 
 	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
@@ -85,6 +83,9 @@
 		It gains additional beneficial effects as you expand your knowledge of the Mansus."
 	icon_state = "mansus"
 	inhand_icon_state = "mansus"
+
+/obj/item/melee/touch_attack/mansus_fist/lock
+	inhand_icon_state = null
 
 /obj/item/melee/touch_attack/mansus_fist/Initialize(mapload)
 	. = ..()

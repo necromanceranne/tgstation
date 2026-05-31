@@ -67,11 +67,11 @@
 	togglelock(user)
 	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
-/obj/machinery/airalarm/proc/togglelock(mob/living/user)
+/obj/machinery/airalarm/proc/togglelock(mob/living/user, forced = FALSE)
 	if(machine_stat & (NOPOWER|BROKEN))
 		to_chat(user, span_warning("It does nothing!"))
 	else
-		if(HAS_SILICON_ACCESS(user))
+		if(HAS_SILICON_ACCESS(user) || forced)
 			locked = !locked
 			return
 		if(src.allowed(usr) && !wires.is_cut(WIRE_IDSCAN))

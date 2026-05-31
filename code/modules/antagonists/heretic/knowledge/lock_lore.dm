@@ -40,7 +40,7 @@
 	robes = /datum/heretic_knowledge/armor/lock
 	knowledge_tier3 = /datum/heretic_knowledge/spell/burglar_finesse
 	guaranteed_side_tier3 = /datum/heretic_knowledge/summon/fire_shark
-	blade = /datum/heretic_knowledge/blade_upgrade/flesh/lock
+	blade = /datum/heretic_knowledge/blade_upgrade/lock
 	knowledge_tier4 = /datum/heretic_knowledge/spell/caretaker_refuge
 	ascension = /datum/heretic_knowledge/ultimate/lock_final
 
@@ -68,6 +68,7 @@
 	var/datum/action/cooldown/spell/touch/mansus_grasp/grasp_spell = locate() in user.actions
 	grasp_spell?.invocation_type = INVOCATION_NONE
 	grasp_spell?.sound = null
+	grasp_spell?.hand_path = /obj/item/melee/touch_attack/mansus_fist/lock
 
 /datum/heretic_knowledge/limited_amount/starting/base_lock/on_lose(mob/user, datum/antagonist/heretic/our_heretic)
 	. = ..()
@@ -75,13 +76,10 @@
 
 /datum/heretic_knowledge/limited_amount/starting/base_lock/on_mansus_grasp(mob/living/source, mob/living/target)
 	. = ..()
-
-	var/obj/item/clothing/under/suit = target.get_item_by_slot(ITEM_SLOT_ICLOTHING)
-	if(!suit.can_adjust)
-		return
-	if(istype(suit) && suit.adjusted == NORMAL_STYLE)
-		suit.toggle_jumpsuit_adjust()
-		suit.update_appearance()
+	if(iscarbon(target))
+		var/mob/living/carbon/carbon_target = target
+		if(!tithe(source, carbon_target, TRUE))
+			return COMPONENT_BLOCK_HAND_USE
 
 /datum/heretic_knowledge/limited_amount/starting/base_lock/proc/on_secondary_mansus_grasp(mob/living/source, atom/target)
 	SIGNAL_HANDLER
@@ -95,13 +93,58 @@
 				continue
 			mecha.mob_exit(occupant, randomstep = TRUE)
 			occupant.Paralyze(5 SECONDS)
+
 	else if(istype(target,/obj/machinery/door/airlock))
 		var/obj/machinery/door/airlock/door = target
 		door.unbolt()
+
 	else if(istype(target, /obj/machinery/computer))
 		var/obj/machinery/computer/computer = target
 		computer.authenticated = TRUE
 		computer.balloon_alert(source, "unlocked")
+
+	else if(isgun(target))
+		var/obj/item/gun/gun = target
+		var/obj/item/firing_pin/old_pin = gun.pin
+		if(old_pin?.pin_removable)
+			old_pin.gun_remove(source)
+			QDEL_NULL(old_pin)
+			var/obj/item/firing_pin/evil_pin = new /obj/item/firing_pin/lock()
+			evil_pin.gun_insert(source, gun)
+			gun.balloon_alert(source, "firing pin abstracted")
+
+	else if(ismachinery(target))
+		var/obj/machinery/machine_target = target
+
+		if(istype(machine_target, /obj/machinery/airalarm))
+			var/obj/machinery/airalarm/airalarm_target = machine_target
+			airalarm_target.togglelock(source, TRUE)
+
+		if(istype(machine_target, /obj/machinery/power/apc))
+			var/obj/machinery/power/apc/apc_target = machine_target
+			apc_target.unlock()
+
+	else if(isbot(target))
+		var/mob/living/basic/bot/robot_target = target
+		if(robot_target.bot_access_flags & BOT_COVER_LOCKED)
+			robot_target.bot_access_flags &= ~BOT_COVER_LOCKED
+			robot_target.balloon_alert(source, "unlocked")
+
+	else if(iscyborg(target))
+		var/mob/living/silicon/robot/cyborg_target = target
+		if(cyborg_target.locked)
+			cyborg_target.locked = FALSE
+		if(!cyborg_target.opened)
+			cyborg_target.opened = TRUE
+			cyborg_target.update_icons()
+		cyborg_target.balloon_alert(source, "unlocked")
+
+	else if(iscarbon(target))
+		var/mob/living/carbon/carbon_target = target
+		tithe(source, carbon_target, FALSE)
+
+	if(target.atom_storage?.locked)
+		target.atom_storage.set_locked(STORAGE_NOT_LOCKED)
 
 	var/turf/target_turf = get_turf(target)
 	SEND_SIGNAL(target_turf, COMSIG_ATOM_MAGICALLY_UNLOCKED, src, source)
@@ -115,6 +158,39 @@
 		return
 
 	return COMPONENT_USE_HAND
+
+/datum/heretic_knowledge/limited_amount/starting/base_lock/proc/tithe(mob/living/source, mob/living/carbon/target, drop_to_ground = FALSE)
+	if(!target.mind)
+		return
+
+	if(IS_HERETIC_OR_MONSTER(target))
+		return
+
+	if(HAS_TRAIT(target, TRAIT_LOCK_HAS_ROBBED))
+		return
+
+	var/datum/job/target_role = target.mind.assigned_role
+	var/relative_value_of_target = target_role.paycheck
+	var/obj/item/coin/spintria/spintria_to_spawn = /obj/item/coin/spintria
+
+	switch(relative_value_of_target)
+		if(PAYCHECK_ZERO, PAYCHECK_LOWER)
+			spintria_to_spawn = /obj/item/coin/spintria/iron
+		if(PAYCHECK_CREW)
+			spintria_to_spawn = /obj/item/coin/spintria/bronze
+		if(PAYCHECK_COMMAND)
+			if(is_captain_job(target_role))
+				spintria_to_spawn = /obj/item/coin/spintria/gold
+			else
+				spintria_to_spawn = /obj/item/coin/spintria/silver
+
+	var/obj/item/coin/spintria/spintria_spawned = new spintria_to_spawn()
+	if(drop_to_ground)
+		spintria_spawned.forceMove(get_turf(target))
+	else
+		source.put_in_hands(spintria_spawned)
+
+	return TRUE
 
 /datum/heretic_knowledge/key_ring
 	name = "Key Keeper’s Burden"
@@ -187,18 +263,23 @@
 	action_to_add = /datum/action/cooldown/spell/pointed/burglar_finesse
 	cost = 2
 
-/datum/heretic_knowledge/blade_upgrade/flesh/lock
+/datum/heretic_knowledge/blade_upgrade/lock
 	name = "Opening Blade"
-	desc = "Your blade has a chance to cause a weeping avulsion on attack."
-	gain_text = "The Pilgrim-Surgeon was not an Steward. Nonetheless, its blades and sutures proved a match for their keys."
-	wound_type = /datum/wound/slash/flesh/critical
+	desc = "Your blade has a chance to cause dislocations on attack."
+	gain_text = "The Stewards have learned that even the organic form is but a series of mechanisms. And they understand best how they \
+		might be undone."
 	research_tree_icon_path = 'icons/ui_icons/antags/heretic/knowledge.dmi'
 	research_tree_icon_state = "blade_upgrade_lock"
 	var/chance = 35
 
-/datum/heretic_knowledge/blade_upgrade/flesh/lock/do_melee_effects(mob/living/source, mob/living/target, obj/item/melee/sickly_blade/blade)
-	if(prob(chance))
-		return ..()
+/datum/heretic_knowledge/blade_upgrade/lock/do_melee_effects(mob/living/source, mob/living/target, obj/item/melee/sickly_blade/blade)
+	if(!prob(chance))
+		return
+
+	var/mob/living/carbon/carbon_target = target
+	var/obj/item/bodypart/bodypart = pick(carbon_target.get_bodyparts(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG))
+	var/datum/wound/joint_pop = new /datum/wound/blunt/bone/moderate()
+	joint_pop.apply_wound(bodypart, attack_direction = get_dir(source, target))
 
 /datum/heretic_knowledge/spell/caretaker_refuge
 	name = "Caretaker’s Last Refuge"
@@ -254,6 +335,6 @@
 	transform_spell.Grant(user)
 
 	var/datum/antagonist/heretic/heretic_datum = GET_HERETIC(user)
-	var/datum/heretic_knowledge/blade_upgrade/flesh/lock/blade_upgrade = heretic_datum.get_knowledge(/datum/heretic_knowledge/blade_upgrade/flesh/lock)
+	var/datum/heretic_knowledge/blade_upgrade/lock/blade_upgrade = heretic_datum.get_knowledge(/datum/heretic_knowledge/blade_upgrade/lock)
 	blade_upgrade.chance += 30
 	new /obj/structure/lock_tear(loc, user.mind)

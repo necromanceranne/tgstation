@@ -4,6 +4,7 @@
 
 /datum/heretic_knowledge/curse
 	abstract_type = /datum/heretic_knowledge/curse
+	allow_spintria = FALSE
 	/// How far can we curse people?
 	var/max_range = 64
 	/// The duration of the curse

@@ -734,4 +734,47 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 			continue
 		target_airlock.lock()
 
+/obj/item/coin/spintria
+	name = "debug spintria"
+	desc = "A seemingly ancient coin. On one facing, there appears to be a depiction of code. What?"
+	icon_state = "coin_spintria"
+	custom_materials = list(/datum/material/iron = COIN_MATERIAL_AMOUNT)
+	material_flags = MATERIAL_EFFECTS | MATERIAL_COLOR
+	sideslist = list("code", "sight")
+	heads_name = "code"
+	var/sacrifice_value = 1
+
+/obj/item/coin/spintria/iron
+	name = "iron spintria"
+	desc = "A seemingly ancient coin. On one facing, there appears to be a depiction of violence."
+	sideslist = list("violence", "sight")
+	heads_name = "violence"
+
+/obj/item/coin/spintria/bronze
+	name = "bronze spintria"
+	desc = "A seemingly ancient coin. On one facing, there appears to be a depiction of shaping."
+	icon_state = "coin_spintria_bronze"
+	custom_materials = list(/datum/material/bronze = COIN_MATERIAL_AMOUNT)
+	sideslist = list("shaping", "sight")
+	heads_name = "shaping"
+	sacrifice_value = 2
+
+/obj/item/coin/spintria/silver
+	name = "silver spintria"
+	desc = "A seemingly ancient coin. On one facing, there appears to be a depiction of debauchery."
+	icon_state = "coin_spintria_silver"
+	custom_materials = list(/datum/material/silver = COIN_MATERIAL_AMOUNT)
+	sideslist = list("debauchery", "sight")
+	heads_name = "debauchery"
+	sacrifice_value = 3
+
+/obj/item/coin/spintria/gold
+	name = "gold spintria"
+	desc = "A seemingly ancient coin. One of the facings appears to be entirely blank."
+	icon_state = "coin_spintria_gold"
+	custom_materials = list(/datum/material/gold = COIN_MATERIAL_AMOUNT)
+	sideslist = list("nothing", "sight")
+	heads_name = "nothing"
+	sacrifice_value = 4
+
 #undef ORESTACK_OVERLAYS_MAX

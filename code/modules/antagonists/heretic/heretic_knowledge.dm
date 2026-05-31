@@ -46,6 +46,8 @@
 	var/drafting_tier = 0
 	/// decides if it's added to the shop, only, and not drafts
 	var/is_shop_only = FALSE
+	/// determines if we can use spintria in place of components
+	var/allow_spintria = TRUE
 
 /**
  * Called before the knowledge is researched,
@@ -483,6 +485,7 @@
 	priority = MAX_KNOWLEDGE_PRIORITY - 10 // A pretty important midgame ritual.
 	research_tree_icon_path = 'icons/obj/antags/eldritch.dmi'
 	research_tree_icon_state = "book_open"
+	allow_spintria = FALSE
 	/// Whether we've done the ritual. Only doable once.
 	var/was_completed = FALSE
 
@@ -570,6 +573,7 @@
 	cost = 2
 	priority = MAX_KNOWLEDGE_PRIORITY + 1 // Yes, the final ritual should be ABOVE the max priority.
 	required_atoms = list(/mob/living/carbon/human = 3)
+	allow_spintria = FALSE
 	/// The typepath of the achievement to grant upon successful ascension.
 	var/datum/award/achievement/misc/ascension_achievement
 	/// The text of the ascension announcement.
