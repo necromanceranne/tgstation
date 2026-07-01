@@ -35,7 +35,7 @@
 	start = /datum/heretic_knowledge/limited_amount/starting/base_lock
 	knowledge_tier1 = /datum/heretic_knowledge/key_ring
 	guaranteed_side_tier1 = /datum/heretic_knowledge/painting
-	knowledge_tier2 = /datum/heretic_knowledge/limited_amount/concierge_rite
+	knowledge_tier2 = /datum/heretic_knowledge/lost_and_found
 	guaranteed_side_tier2 = /datum/heretic_knowledge/spell/opening_blast
 	robes = /datum/heretic_knowledge/armor/lock
 	knowledge_tier3 = /datum/heretic_knowledge/spell/burglar_finesse
@@ -194,7 +194,7 @@
 
 /datum/heretic_knowledge/key_ring
 	name = "Key Keeper’s Burden"
-	desc = "Allows you to transmute a wallet, an iron rod, and an ID card to create an Eldritch Card. \
+	desc = "Allows you to transmute two bronze spintria and an ID card to create an Eldritch Card. \
 		Hit a pair of airlocks with it to create a pair of portals, which will teleport you between them, but teleport non-heretics randomly. \
 		You can ctrl-click the card to invert this behavior for created portals. \
 		Each card may only sustain a single pair of portals at the same time. \
@@ -202,8 +202,7 @@
 		Attacking it with a normal ID card consumes it and gains its access, and you can use it in-hand to change its appearance to a card you fused."
 	gain_text = "The Keeper sneered. \"These plastic rectangles are a mockery of keys, and I curse every door that desires them.\""
 	required_atoms = list(
-		/obj/item/storage/wallet = 1,
-		/obj/item/stack/rods = 1,
+		/obj/item/coin/spintria/bronze = 2,
 		/obj/item/card/id/advanced = 1,
 	)
 	result_atoms = list(/obj/item/card/id/advanced/heretic)
@@ -223,21 +222,50 @@
 	result_item.shapeshift(id)
 	return TRUE
 
-/datum/heretic_knowledge/limited_amount/concierge_rite
-	name = "Concierge's Rite"
-	desc = "Allows you to transmute a crayon, a wooden plank, and a multitool to create a Labyrinth Handbook. \
-		It can materialize a barricade at range that only you and people resistant to magic can pass. Has 5 charges which regenerate over time."
-	gain_text = "The Concierge scribbled my name into the Handbook. \"Welcome to your new home, fellow Steward.\""
+/datum/heretic_knowledge/lost_and_found
+	name = "Conceirge's Rite: Lost and Found"
+	desc = "Allows you to transmute a pair of spintria to produce a particular outcome based \
+			on their combined relative power. The higher value, the more powerful the effect."
+	gain_text = "The Concierge clicked his tongue as he took my luggage. \"So, a long stay then?\""
 	required_atoms = list(
-		/obj/item/toy/crayon = 1,
-		/obj/item/stack/sheet/mineral/wood = 1,
-		/obj/item/multitool = 1,
+		/obj/item/coin/spintria = 2,
 	)
-	result_atoms = list(/obj/item/heretic_labyrinth_handbook)
+	result_atoms = list(/obj/item/coin/spintria/iron)
 	cost = 2
 	research_tree_icon_path = 'icons/obj/service/library.dmi'
 	research_tree_icon_state = "heretichandbook"
 	drafting_tier = 5
+
+/datum/heretic_knowledge/lost_and_found/recipe_snowflake_check(mob/living/user, list/atoms, list/selected_atoms, turf/loc)
+	var/spintria_value = 0
+	for(var/obj/item/coin/spintria/tip_your_concierge as anything in selected_atoms)
+		// like a mini version of the normal payment system.
+		if(istype(possible_coin, /obj/item/coin/spintria))
+			var/obj/item/coin/spintria/fancy_coin = tip_your_concierge
+			spintria_value += fancy_coin.sacrifice_value
+
+	var/list/determined_outcome = list()
+
+	switch(spintria_value)
+		if(-INFINITTY, 2) //Probably paid in iron
+			determined_outcome = list()
+
+		if(3, 4) //Probably paid in bronze
+			determined_outcome = list()
+
+		if(5, 7) //Probably paid at least one silver
+			determined_outcome = list()
+
+		if(8, 10) //Probably paid only in silver
+			determined_outcome = list()
+
+		if(10, 12) //Had to have paid a gold, but didn't have a silver.
+			determined_outcome = list()
+
+		if(13, INFINITTY) //Had to pay a gold and a silver.
+			determined_outcome = list()
+
+	src.result_atoms = determined_outcome
 
 /datum/heretic_knowledge/armor/lock
 	desc = "Allows you to transmute a table (or a suit), a mask and a crowbar to create a shifting guise. \
@@ -254,12 +282,12 @@
 		/obj/item/crowbar = 1,
 	)
 
-/datum/heretic_knowledge/spell/burglar_finesse
-	name = "Burglar's Finesse"
-	desc = "Grants you Burglar's Finesse, a single-target spell \
-		that puts a random item from the victims backpack into your hand."
-	gain_text = "Consorting with Burglar spirits is frowned upon, but a Steward will always want to learn about new doors."
-
+/datum/heretic_knowledge/spell/hold_person
+	name = "A Soliloquy, Echoing from the Boudoir"
+	desc = "Grants you Enrapturing Soliloquy, a spell that slowly renders a target still and harmless. Enraptured targets are \
+		more vulnerable to your blade's attacks, but the spell is broken the moment the target is harmed."
+	gain_text = "The Lady of the Labryinth has long since retreated from public view. Yet, guests have long since learned to close their ears \
+		to the distant echos of her contemplative ruminations, least they find themselves another of her hopeless suitors."
 	action_to_add = /datum/action/cooldown/spell/pointed/burglar_finesse
 	cost = 2
 

@@ -744,6 +744,11 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	heads_name = "code"
 	var/sacrifice_value = 1
 
+
+/obj/item/coin/spintria/Initialize(mapload, new_amount, merge, list/mat_override, mat_amt)
+	. = ..()
+	ADD_TRAIT(mod, TRAIT_EXAMINE_SKIP, REF(src))
+
 /obj/item/coin/spintria/iron
 	name = "iron spintria"
 	desc = "A seemingly ancient coin. On one facing, there appears to be a depiction of violence."
@@ -766,7 +771,7 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	custom_materials = list(/datum/material/silver = COIN_MATERIAL_AMOUNT)
 	sideslist = list("debauchery", "sight")
 	heads_name = "debauchery"
-	sacrifice_value = 3
+	sacrifice_value = 5
 
 /obj/item/coin/spintria/gold
 	name = "gold spintria"
@@ -775,6 +780,6 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	custom_materials = list(/datum/material/gold = COIN_MATERIAL_AMOUNT)
 	sideslist = list("nothing", "sight")
 	heads_name = "nothing"
-	sacrifice_value = 4
+	sacrifice_value = 10
 
 #undef ORESTACK_OVERLAYS_MAX
