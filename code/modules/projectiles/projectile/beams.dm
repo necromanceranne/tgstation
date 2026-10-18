@@ -16,15 +16,11 @@
 	ricochets_max = 50 //Honk!
 	ricochet_chance = 80
 	reflectable = TRUE
-	wound_bonus = -20
-	exposed_wound_bonus = 10
-
 
 /obj/projectile/beam/laser
 	tracer_type = /obj/effect/projectile/tracer/laser
 	muzzle_type = /obj/effect/projectile/muzzle/laser
 	impact_type = /obj/effect/projectile/impact/laser
-	wound_bonus = -20
 	damage = 25
 	exposed_wound_bonus = 40
 
@@ -66,8 +62,8 @@
 /obj/projectile/beam/laser/hellfire
 	name = "hellfire laser"
 	icon_state = "hellfire"
-	wound_bonus = 0
 	damage = 30
+	wound_bonus = 10
 	speed = 1.6
 	light_color = "#FF969D"
 
@@ -160,10 +156,10 @@
 	hitsound = 'sound/items/bikehorn.ogg' //honk
 	hitsound_wall = 'sound/items/bikehorn.ogg'
 
-/obj/projectile/beam/xray
+/obj/projectile/beam/laser/xray
 	name = "\improper X-ray beam"
 	icon_state = "xray"
-	damage = 15
+	damage = 20
 	range = 15
 	armour_penetration = 100
 	pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE | PASSCLOSEDTURF | PASSMACHINE | PASSSTRUCTURE | PASSDOORS
@@ -211,7 +207,7 @@
 	weak_against_armour = FALSE
 	damage = 35 //slight increase in damage just for the hell of it
 
-/obj/projectile/beam/pulse
+/obj/projectile/beam/laser/pulse
 	name = "pulse"
 	icon_state = "u_laser"
 	damage = 50
@@ -220,9 +216,8 @@
 	tracer_type = /obj/effect/projectile/tracer/pulse
 	muzzle_type = /obj/effect/projectile/muzzle/pulse
 	impact_type = /obj/effect/projectile/impact/pulse
-	wound_bonus = 10
 
-/obj/projectile/beam/pulse/on_hit(atom/target, blocked = 0, pierce_hit)
+/obj/projectile/beam/laser/pulse/on_hit(atom/target, blocked = 0, pierce_hit)
 	. = ..()
 	if (!QDELETED(target) && (isturf(target) || isstructure(target)))
 		if(isobj(target))
@@ -230,16 +225,13 @@
 		else
 			SSexplosions.medturf += target
 
-/obj/projectile/beam/pulse/shotgun
-	damage = 30
-
-/obj/projectile/beam/pulse/heavy
+/obj/projectile/beam/laser/pulse/heavy
 	name = "heavy pulse laser"
 	icon_state = "pulse1_bl"
 	projectile_piercing = ALL
 	var/pierce_hits = 2
 
-/obj/projectile/beam/pulse/heavy/on_hit(atom/target, blocked = 0, pierce_hit)
+/obj/projectile/beam/laser/pulse/heavy/on_hit(atom/target, blocked = 0, pierce_hit)
 	if(pierce_hits <= 0)
 		projectile_piercing = NONE
 	pierce_hits -= 1
